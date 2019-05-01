@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+<script>
+    var xhr = new XMLHttpRequest();
+    xhr.onload=function(e){
+        var urls=JSON.parse(e.target.responseText);
+        for(var i = 0 ;i<urls.length;i++){
+            var img = document.createElement("img");
+            img.src = urls[i];
+            document.body.appendChild(img);
+        }
+    };
+    xhr.open("get","/home/getimages");
+    xhr.send();
+</script>

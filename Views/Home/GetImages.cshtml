@@ -1,0 +1,11 @@
+@model IEnumerable<string>
+
+<ul>
+    @foreach (var url in Model)
+    {
+        <li><img src="@url" alt="@System.IO.Path.GetFileName(url)"/></li>
+    }
+</ul>
+
+
+

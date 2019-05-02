@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Itminus.Areas.DirectLine.Models;
+using Itminus.InDirectLine.Models;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
 
-namespace Itminus.Areas.DirectLine.Services{
+namespace Itminus.InDirectLine.Services{
 
 
     public interface IConversationHistoryStore

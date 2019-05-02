@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Itminus.Areas.DirectLine.Services
+namespace Itminus.InDirectLine.Services
 {
     public static class ServiceCollectionExtension
     {

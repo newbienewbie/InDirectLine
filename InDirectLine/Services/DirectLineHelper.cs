@@ -5,12 +5,12 @@ using System.Text;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Itminus.Areas.DirectLine.Utils;
+using Itminus.InDirectLine.Utils;
 using System.Threading.Tasks;
 using System.Net;
-using Itminus.Areas.DirectLine.Models;
+using Itminus.InDirectLine.Models;
 
-namespace Itminus.Areas.DirectLine.Services
+namespace Itminus.InDirectLine.Services
 {
     public class DirectLineHelper
     {

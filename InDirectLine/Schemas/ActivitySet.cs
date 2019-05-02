@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
 
-namespace Itminus.Areas.DirectLine.Models
+namespace Itminus.InDirectLine.Models
 {
     public class ActivitySet
     {

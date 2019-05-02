@@ -3,17 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Itminus.Areas.DirectLine.Models;
-using Itminus.Areas.DirectLine.Services;
+using Itminus.InDirectLine.Models;
+using Itminus.InDirectLine.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
-namespace Itminus.Areas.DirectLine.Controllers{
+namespace Itminus.InDirectLine.Controllers{
 
     [ApiController]
-    [Area("InDirectLine")]
     public class DirectLineController : Controller
     {
         private ILogger<DirectLineController> _logger;

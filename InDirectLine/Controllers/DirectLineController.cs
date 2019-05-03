@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Itminus.InDirectLine.InDirectLine.Services.IDirectLineConnections;
 using Itminus.InDirectLine.Models;
 using Itminus.InDirectLine.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -18,12 +19,14 @@ namespace Itminus.InDirectLine.Controllers{
     {
         private ILogger<DirectLineController> _logger;
         private readonly DirectLineHelper _helper;
+        private readonly IDirectLineConnectionManager _connectionManager;
         private InDirectLineOptions _inDirectlineOption;
 
-        public DirectLineController(ILogger<DirectLineController> logger, IOptions<InDirectLineOptions> opt, DirectLineHelper helper)
+        public DirectLineController(ILogger<DirectLineController> logger, IOptions<InDirectLineOptions> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager)
         {
             this._logger= logger;
             this._helper = helper;
+            this._connectionManager = connectionManager;
             this._inDirectlineOption = opt.Value;
         }
 
@@ -76,6 +79,8 @@ namespace Itminus.InDirectLine.Controllers{
             }
             //get converation by id
             var activitySet = await _helper.GetActivitySetFromConversationHistoryAsync(conversationId,normailizedWatermark);
+            var message = JsonConvert.SerializeObject(activitySet);
+            await this._connectionManager.SendAsync(conversationId,message);
             if(activitySet == null){
                 return BadRequest(new {
                     Message = "Conversation doesn't exist",

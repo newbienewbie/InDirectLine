@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Itminus.InDirectLine.InDirectLine;
 using Itminus.InDirectLine.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -48,6 +49,7 @@ namespace Itminus.InDirectLine
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddScoped<WebSocketConnectionMiddleware>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,6 +70,17 @@ namespace Itminus.InDirectLine
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            var webSocketOptions = new WebSocketOptions()
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(120),
+                ReceiveBufferSize = 4 * 1024
+            };
+
+            webSocketOptions.AllowedOrigins.Add("http://localhost:3978");
+            webSocketOptions.AllowedOrigins.Add("*");
+            app.UseWebSockets(webSocketOptions);
+            app.UseMiddleware<WebSocketConnectionMiddleware>();
 
             app.UseMvc(routes =>
             {

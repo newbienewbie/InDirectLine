@@ -52,7 +52,7 @@ namespace Itminus.InDirectLine.InDirectLine.Services.IDirectLineConnections
         // todo : return Task<RegisterResult>
         private async Task RegisterConnectionHandler(string conversationId, IDirectLineConnection connection)
         {
-            await this.RegisterConnectionHandler(conversationId,connection);
+            await this.RegisterConnectionAsync(conversationId, connection);
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

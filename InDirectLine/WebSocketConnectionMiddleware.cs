@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Itminus.InDirectLine.InDirectLine
@@ -21,17 +22,20 @@ namespace Itminus.InDirectLine.InDirectLine
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            var reg = new Regex(@"$/v3/directline/conversations/(?<conversationId>.*)/stream");
-            var m=reg.Match(context.Request.Path);
-            var conversaionId = m.Groups["conversationId"].Value;
+            var reg = new Regex(@"^/v3/directline/conversations/(?<conversationId>.*)/stream");
+            var path = context.Request.Path;
+            var m=reg.Match(path);
             if (m.Success)
             {
+                var conversaionId = m.Groups["conversationId"].Value;
                 if (context.WebSockets.IsWebSocketRequest)
                 {
                     WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
                     // register connection 
                     var conn = new WebSocketDirectLineConnection(webSocket);
                     await this._connectionManager.RegisterConnectionAsync(conversaionId,conn);
+                    var buffer = new ArraySegment<byte>(System.Text.Encoding.UTF8.GetBytes(""));
+                    await webSocket.SendAsync(buffer,WebSocketMessageType.Text,false, CancellationToken.None);
                 }
                 else
                 {

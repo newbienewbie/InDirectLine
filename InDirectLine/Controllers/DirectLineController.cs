@@ -45,11 +45,12 @@ namespace Itminus.InDirectLine.Controllers{
         {
             var result= await this._helper.CreateNewConversation();
             var conversationId = result.Activity.Conversation.Id;
+                
             return new OkObjectResult(new DirectLineConversation{
                 ConversationId = conversationId,
                 ExpiresIn= this._inDirectlineOption.ExpiresIn,
                 Token = Request.Headers["Authentication"],
-                StreamUrl= $"http://localhost:3000/v3/[controller]/conversations/{conversationId}/stream?t=RCurR_XV9ZA.cwA..."
+                StreamUrl= $"ws://localhost:3000/v3/directline/conversations/{conversationId}/stream?t=RCurR_XV9ZA.cwA..."
             });
         }
 
@@ -62,7 +63,7 @@ namespace Itminus.InDirectLine.Controllers{
                 ConversationId = conversationId,
                 ExpiresIn= this._inDirectlineOption.ExpiresIn,
                 Token = Request.Headers["Authentication"],
-                StreamUrl= $"http://localhost:3000/v3/directline/conversations/{conversationId}/stream?t=RCurR_XV9ZA.cwA..."
+                StreamUrl= $"ws://localhost:3000/v3/directline/conversations/{conversationId}/stream?t=RCurR_XV9ZA.cwA..."
             });
         }
 

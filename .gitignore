@@ -1,3 +1,6 @@
 bin/
 obj/
 /.vs/Itminus.InDirectLine/v15
+appsettings.Development.json
+appsettings.Production.json
+.vs/

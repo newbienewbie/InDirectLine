@@ -18,13 +18,14 @@ namespace Itminus.InDirectLine.Utils
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            return serializer.Deserialize<Activity>(reader);
+            return serializer.Deserialize(reader,objectType);
         }
 
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             serializer.NullValueHandling = NullValueHandling.Ignore;
+            serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             serializer.ContractResolver = new DefaultContractResolver 
             {
                 NamingStrategy = new CamelCaseNamingStrategy()

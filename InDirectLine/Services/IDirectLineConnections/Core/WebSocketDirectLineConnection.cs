@@ -5,16 +5,8 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Itminus.InDirectLine.InDirectLine.Services.IDirectLineConnections
+namespace Itminus.InDirectLine.Services.IDirectLineConnections
 {
-    public interface IDirectLineConnection
-    {
-        Task<(bool,ArraySegment<byte>)> ReceiveAsync();
-        Task SendAsync(ArraySegment<byte> buffer);
-        Task CloseAsync(string reason);
-        bool Avaiable { get; }
-    }
-
     public class WebSocketDirectLineConnection : IDirectLineConnection
     {
         public WebSocketDirectLineConnection(WebSocket webSocket)
@@ -27,19 +19,27 @@ namespace Itminus.InDirectLine.InDirectLine.Services.IDirectLineConnections
         public bool Avaiable
         {
             get {
-                return this.WebSocket.State != WebSocketState.Open
-                    && this.WebSocket.State != WebSocketState.Connecting
+                return this.WebSocket.State == WebSocketState.Open
+                    || this.WebSocket.State == WebSocketState.Connecting
                     ;
             }
         }
 
-        public async Task CloseAsync(string reason)
+        public async Task CloseAsync(object status,string reason)
         {
-            await this.WebSocket.CloseAsync(
-                WebSocketCloseStatus.Empty,
-                reason,
-                CancellationToken.None
-            );
+            if(status is WebSocketCloseStatus s){
+                await this.WebSocket.CloseAsync(
+                    s,
+                    reason,
+                    CancellationToken.None
+                );
+            }else{
+                await this.WebSocket.CloseAsync(
+                    WebSocketCloseStatus.Empty,
+                    reason,
+                    CancellationToken.None
+                );
+            }
         }
 
         public async Task<(bool,ArraySegment<byte>)> ReceiveAsync()
@@ -65,14 +65,10 @@ namespace Itminus.InDirectLine.InDirectLine.Services.IDirectLineConnections
             await this.WebSocket.SendAsync(
                 buffer,
                 WebSocketMessageType.Text,
-                false,
+                true,
                 CancellationToken.None
             );
         }
 
-        public Task SendAsync()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

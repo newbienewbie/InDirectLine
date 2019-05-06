@@ -1,5 +1,5 @@
 using System;
-using Itminus.InDirectLine.InDirectLine.Services.IDirectLineConnections;
+using Itminus.InDirectLine.Services.IDirectLineConnections;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Itminus.InDirectLine.Services
@@ -13,7 +13,7 @@ namespace Itminus.InDirectLine.Services
             services.AddSingleton<IConversationHistoryStore, InMemoryConversationHistoryStore>();
             services.AddSingleton<IDirectLineConnection,WebSocketDirectLineConnection>();
             services.AddSingleton<IDirectLineConnectionManager,DirectLineConnectionManager>();
-            services.AddHostedService<DirectLineConnectionHostedService>();
+            // services.AddHostedService<DirectLineConnectionHostedService>();
             return services.AddScoped<DirectLineHelper>();
         }
     }

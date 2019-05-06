@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Itminus.InDirectLine.Services.IDirectLineConnections;
+using Itminus.InDirectLine.Models;
 using Itminus.InDirectLine.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Schema;
@@ -17,12 +20,14 @@ namespace Itminus.InDirectLine.Controllers
         private readonly ILogger<ConversationsController> _logger;
         private readonly IOptions<InDirectLineOptions> _opt;
         private readonly DirectLineHelper _helper;
+        private readonly IDirectLineConnectionManager _connectionManager;
 
-        public ConversationsController(ILogger<ConversationsController> logger, IOptions<InDirectLineOptions> opt, DirectLineHelper helper)
+        public ConversationsController(ILogger<ConversationsController> logger, IOptions<InDirectLineOptions> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager)
         {
             this._logger = logger;
             this._opt = opt;
             this._helper = helper;
+            this._connectionManager = connectionManager;
         }
 
         [HttpGet("v3/[controller]")]
@@ -66,6 +71,14 @@ namespace Itminus.InDirectLine.Controllers
                 });
             }
             await this._helper.AddActivityToConversationHistoryAsync(conversationId,activity);
+            var activitySet= new ActivitySet{
+                Activities = new List<Activity>(){
+                    activity,
+                },
+                Watermark = 0,
+            };
+            var message = JsonConvert.SerializeObject(activitySet);
+            await this._connectionManager.SendAsync(conversationId,message);
             this._logger.LogInformation("message from bot received: \r\nConversationId={0}\r\n ActivityId={1}\r\nActivity.Id={2}\tActivityType={3}\tMessageText={4}",conversationId,replyTo,activity.Id,activity.Type,activity.Text);
             return new OkResult();
         }

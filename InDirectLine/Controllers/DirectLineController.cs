@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Itminus.InDirectLine.InDirectLine.Services.IDirectLineConnections;
+using Itminus.InDirectLine.Services.IDirectLineConnections;
 using Itminus.InDirectLine.Models;
 using Itminus.InDirectLine.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -85,9 +85,6 @@ namespace Itminus.InDirectLine.Controllers{
                     Message = "Conversation doesn't exist",
                 });
             }
-            // var message = JsonConvert.SerializeObject(activitySet);
-            // await this._connectionManager.SendAsync(conversationId,message);
-
             return new OkObjectResult(activitySet);
         }
 

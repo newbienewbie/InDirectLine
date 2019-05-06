@@ -80,13 +80,13 @@ namespace Itminus.InDirectLine.Controllers{
             }
             //get converation by id
             var activitySet = await _helper.GetActivitySetFromConversationHistoryAsync(conversationId,normailizedWatermark);
-            var message = JsonConvert.SerializeObject(activitySet);
-            await this._connectionManager.SendAsync(conversationId,message);
             if(activitySet == null){
                 return BadRequest(new {
                     Message = "Conversation doesn't exist",
                 });
             }
+            // var message = JsonConvert.SerializeObject(activitySet);
+            // await this._connectionManager.SendAsync(conversationId,message);
 
             return new OkObjectResult(activitySet);
         }

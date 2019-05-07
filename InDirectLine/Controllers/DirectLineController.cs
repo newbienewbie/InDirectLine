@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace Itminus.InDirectLine.Controllers{
 
@@ -107,14 +109,8 @@ namespace Itminus.InDirectLine.Controllers{
                 Id = conversationId,
             };
 
-            var activitySet= new ActivitySet{
-                Activities = new List<Activity>(){ activity, },
-                Watermark = 0,
-            };
-            var message = JsonConvert.SerializeObject(activitySet);
             // notify the client 
-            await this._connectionManager.SendAsync(conversationId,message);
-
+            await this._connectionManager.SendActivitySetAsync(conversationId,activity);
             var statusCode=await this._helper.AddActivityToConversationAsync(conversationId,activity);
 
             return new OkObjectResult(new ResourceResponse{
@@ -130,7 +126,7 @@ namespace Itminus.InDirectLine.Controllers{
         /// <param name="userId"></param>
         /// <returns></returns>
         [HttpPost("v3/[controller]/conversations/{conversationId}/upload")]
-        public async Task<IActionResult> ReceiveAttachmentsFromClient([FromRoute]string conversationId,[FromQuery]string userId,IList<IFormFile> file)
+        public async Task<IActionResult> ReceiveAttachmentsFromClient([FromRoute]string conversationId,[FromQuery]string userId,[FromForm]IList<IFormFile> file)
         {
             if(!Request.HasFormContentType){
                 return BadRequest(new{
@@ -143,8 +139,20 @@ namespace Itminus.InDirectLine.Controllers{
                 ContentType = Request.ContentType,
                 Name = f.Name,
             }).ToList();
-            var activity = this._helper.CreateAttachmentActivity(serviceUrl,conversationId, attachments);
-            var statusCode = await this._helper.AddActivityToConversationAsync(conversationId, activity as Activity);
+
+            Activity activity=null;
+            var activityStream = Request.Form.Files["activity"]?.OpenReadStream();
+            if(activityStream==null){
+                activity=this._helper.CreateAttachmentActivity(serviceUrl,conversationId,userId,attachments) as Activity ;
+            }else{
+                var json = await new StreamReader(activityStream).ReadToEndAsync();
+                activity = JsonConvert.DeserializeObject<Activity>(json);
+            }
+            activity.Id = Guid.NewGuid().ToString();
+            activity.Attachments = attachments;
+
+            await this._connectionManager.SendActivitySetAsync(conversationId,activity);
+            var statusCode = await this._helper.AddActivityToConversationAsync(conversationId, activity);
 
             return new OkObjectResult(new ResourceResponse{
                 Id = activity.Id,

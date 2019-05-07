@@ -71,14 +71,7 @@ namespace Itminus.InDirectLine.Controllers
                 });
             }
             await this._helper.AddActivityToConversationHistoryAsync(conversationId,activity);
-            var activitySet= new ActivitySet{
-                Activities = new List<Activity>(){
-                    activity,
-                },
-                Watermark = 0,
-            };
-            var message = JsonConvert.SerializeObject(activitySet);
-            await this._connectionManager.SendAsync(conversationId,message);
+            await this._connectionManager.SendActivitySetAsync(conversationId,activity);
             this._logger.LogInformation("message from bot received: \r\nConversationId={0}\r\n ActivityId={1}\r\nActivity.Id={2}\tActivityType={3}\tMessageText={4}",conversationId,replyTo,activity.Id,activity.Type,activity.Text);
             return new OkResult();
         }

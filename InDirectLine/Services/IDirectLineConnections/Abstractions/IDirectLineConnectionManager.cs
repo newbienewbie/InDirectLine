@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Itminus.InDirectLine.Models;
+using Microsoft.Bot.Schema;
+using Newtonsoft.Json;
 
 namespace Itminus.InDirectLine.Services.IDirectLineConnections
 {

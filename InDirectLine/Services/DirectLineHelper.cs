@@ -79,7 +79,7 @@ namespace Itminus.InDirectLine.Services
             return activity.AsConversationUpdateActivity();
         }
 
-        public IMessageActivity CreateAttachmentActivity(string serviceUrl, string conversationId, IList<Attachment> attachments )
+        public IMessageActivity CreateAttachmentActivity(string serviceUrl, string conversationId,string userId ,IList<Attachment> attachments )
         {
             var activity = new Activity{
                 Type = ActivityTypes.Message,
@@ -87,8 +87,7 @@ namespace Itminus.InDirectLine.Services
                 ServiceUrl = serviceUrl,
                 Conversation = new ConversationAccount{ Id = conversationId, },
                 From = new ChannelAccount{
-                    Id = "offline-directline", 
-                    Name = "Offline Directline Server"
+                    Id = userId,
                 },
                 Id= Guid.NewGuid().ToString(),
                 Attachments = attachments,

@@ -107,6 +107,14 @@ namespace Itminus.InDirectLine.Controllers{
                 Id = conversationId,
             };
 
+            var activitySet= new ActivitySet{
+                Activities = new List<Activity>(){ activity, },
+                Watermark = 0,
+            };
+            var message = JsonConvert.SerializeObject(activitySet);
+            // notify the client 
+            await this._connectionManager.SendAsync(conversationId,message);
+
             var statusCode=await this._helper.AddActivityToConversationAsync(conversationId,activity);
 
             return new OkObjectResult(new ResourceResponse{

@@ -1,4 +1,5 @@
 
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,11 +22,11 @@ namespace Itminus.InDirectLine.Services{
 
     public class InMemoryConversationHistoryStore : IConversationHistoryStore
     {
-        private static IDictionary<string,IList<Activity>> _history;
+        private ConcurrentDictionary<string,IList<Activity>> _history;
         public InMemoryConversationHistoryStore()
         {
             if(_history == null)
-                _history = new Dictionary<string,IList<Activity>>();
+                _history = new ConcurrentDictionary<string,IList<Activity>>();
         }
 
         public async Task CreateConversationIfNotExistsAsync(string conversationId)

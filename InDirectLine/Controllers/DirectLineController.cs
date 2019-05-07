@@ -11,6 +11,7 @@ using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace Itminus.InDirectLine.Controllers{
 
@@ -113,7 +114,34 @@ namespace Itminus.InDirectLine.Controllers{
             });
         }
 
+        /// <summary>
+        /// process multiple files uploading 
+        ///     seems that the single file uploading (body as a file stream) is not used by webchat
+        /// </summary>
+        /// <param name="conversationId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpPost("v3/[controller]/conversations/{conversationId}/upload")]
+        public async Task<IActionResult> ReceiveAttachmentsFromClient([FromRoute]string conversationId,[FromQuery]string userId,IList<IFormFile> file)
+        {
+            if(!Request.HasFormContentType){
+                return BadRequest(new{
+                    Message = "must be multipart/form-data"
+                });
+            }
+            var serviceUrl = this._inDirectlineOption.ServiceUrl;
+            IList<Attachment> attachments = file.Select(f => new Attachment(){
+                ContentUrl = serviceUrl+"/attachments/"+f.Name,
+                ContentType = Request.ContentType,
+                Name = f.Name,
+            }).ToList();
+            var activity = this._helper.CreateAttachmentActivity(serviceUrl,conversationId, attachments);
+            var statusCode = await this._helper.AddActivityToConversationAsync(conversationId, activity as Activity);
 
+            return new OkObjectResult(new ResourceResponse{
+                Id = activity.Id,
+            });
+        }
 
     }
 

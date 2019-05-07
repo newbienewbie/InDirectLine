@@ -65,10 +65,8 @@ namespace Itminus.InDirectLine.Services
             var activity = new Activity{
                 Type =  ActivityTypes.ConversationUpdate,
                 ChannelId = "emulator",
-                ServiceUrl = "",
-                Conversation = new ConversationAccount{ 
-                    Id = conversationId,
-                },
+                ServiceUrl = serviceUrl,
+                Conversation = new ConversationAccount{ Id = conversationId, },
                 Id= Guid.NewGuid().ToString(),
                 MembersAdded= new List<ChannelAccount>(),
                 MembersRemoved= new List<ChannelAccount>(),
@@ -79,6 +77,23 @@ namespace Itminus.InDirectLine.Services
             };
 
             return activity.AsConversationUpdateActivity();
+        }
+
+        public IMessageActivity CreateAttachmentActivity(string serviceUrl, string conversationId, IList<Attachment> attachments )
+        {
+            var activity = new Activity{
+                Type = ActivityTypes.Message,
+                ChannelId = "emulator",
+                ServiceUrl = serviceUrl,
+                Conversation = new ConversationAccount{ Id = conversationId, },
+                From = new ChannelAccount{
+                    Id = "offline-directline", 
+                    Name = "Offline Directline Server"
+                },
+                Id= Guid.NewGuid().ToString(),
+                Attachments = attachments,
+            };
+            return activity.AsMessageActivity();
         }
 
         public async Task<bool> ConversationHistoryExistsAsync(string conversationId)
@@ -92,7 +107,7 @@ namespace Itminus.InDirectLine.Services
             await _history.AddActivityAsync(conversationId, activity);
             var botMessageEndpointUrl = GetBotMessageEndpointUrl();
             var resp = await this._httpClient.SendJsonAsync(botMessageEndpointUrl,activity);
-            var content=resp.Content.ReadAsStringAsync();
+            var content=await resp.Content.ReadAsStringAsync();
             return resp.StatusCode;
         }
 

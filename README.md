@@ -6,6 +6,6 @@ For example, test [webchat](https://github.com/Microsoft/BotFramework-WebChat) w
 
 * [x] REST API for normal messages
 * [x] WebSocket support
-* [ ] Attachment support
+* [x] Attachment support
 * [ ] Persistene Layer & InMemory storage & clean up resources automatically
 * [ ] Authentication 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Itminus.InDirectLine.InDirectLine;
+using Itminus.InDirectLine.Middlewares;
 using Itminus.InDirectLine.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

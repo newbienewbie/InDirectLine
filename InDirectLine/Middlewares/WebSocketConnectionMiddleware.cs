@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Itminus.InDirectLine.InDirectLine
+namespace Itminus.InDirectLine.Middlewares
 {
     public class WebSocketConnectionMiddleware : IMiddleware
     {

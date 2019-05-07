@@ -34,7 +34,11 @@ namespace Itminus.InDirectLine.Authorization
                     c.Type== TokenBuilder.ClaimTypeConversationID && 
                     c.Value == conversationId 
                 );
-                context.Succeed(requirement);
+                if(conversationMatches){
+                    context.Succeed(requirement);
+                }else{
+                    context.Fail();
+                }
             }
             else{
                 context.Fail();

@@ -15,6 +15,8 @@ namespace Itminus.InDirectLine.Services
     {
         private readonly IConfiguration _config;
 
+        public const string ClaimTypeConversationID = "Claim_Type:Itminus.InDirectLine:ConversationID";
+
         public TokenBuilder(IConfiguration config)
         {
             this._config = config;

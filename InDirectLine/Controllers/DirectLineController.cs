@@ -54,6 +54,7 @@ namespace Itminus.InDirectLine.Controllers{
             var conversationId = result.Activity.Conversation.Id;
 
             var claims = new List<Claim>();
+            claims.Add(new Claim(TokenBuilder.ClaimTypeConversationID, conversationId));
 
             var expiresIn = this._inDirectlineOption.TokenExpiresIn ;
             var token = this._tokenBuilder.BuildToken(conversationId,claims,expiresIn);
@@ -72,7 +73,7 @@ namespace Itminus.InDirectLine.Controllers{
 
         //
         [HttpGet("v3/[controller]/conversations/{conversationId}")]
-        [Authorize]
+        [Authorize("MatchConversation")]
         public IActionResult ConversationInfo(string conversationId)
         {
             return new OkObjectResult(new DirectLineConversation{
@@ -85,7 +86,7 @@ namespace Itminus.InDirectLine.Controllers{
 
         //
         [HttpGet("v3/[controller]/conversations/{conversationId}/activities")]
-        [Authorize]
+        [Authorize("MatchConversation")]
         public async Task<IActionResult> ShowActivitiesToClient([FromRoute]string conversationId, [FromQuery]string watermark)
         {
 
@@ -106,7 +107,7 @@ namespace Itminus.InDirectLine.Controllers{
         }
 
         [HttpPost("v3/[controller]/conversations/{conversationId}/activities")]
-        [Authorize]
+        [Authorize("MatchConversation")]
         public async Task<IActionResult> SendActivityToBot([FromRoute]string conversationId, [FromBody] Activity activity)
         {
             var conversationExists = await this._helper.ConversationHistoryExistsAsync(conversationId);
@@ -140,7 +141,7 @@ namespace Itminus.InDirectLine.Controllers{
         /// <param name="conversationId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        [Authorize]
+        [Authorize("MatchConversation")]
         [HttpPost("v3/[controller]/conversations/{conversationId}/upload")]
         public async Task<IActionResult> ReceiveAttachmentsFromClient([FromRoute]string conversationId,[FromQuery]string userId,[FromForm]IList<IFormFile> file)
         {
@@ -165,7 +166,9 @@ namespace Itminus.InDirectLine.Controllers{
                 activity = JsonConvert.DeserializeObject<Activity>(json);
             }
             activity.Id = Guid.NewGuid().ToString();
+            activity.ServiceUrl = serviceUrl;
             activity.Attachments = attachments;
+            activity.Conversation = new ConversationAccount{Id = conversationId};
 
             await this._connectionManager.SendActivitySetAsync(conversationId,activity);
             var statusCode = await this._helper.AddActivityToConversationAsync(conversationId, activity);

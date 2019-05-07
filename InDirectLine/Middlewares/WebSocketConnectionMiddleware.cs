@@ -1,5 +1,8 @@
-﻿using Itminus.InDirectLine.Services.IDirectLineConnections;
+﻿using Itminus.InDirectLine.Services;
+using Itminus.InDirectLine.Services.IDirectLineConnections;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +17,12 @@ namespace Itminus.InDirectLine.Middlewares
     public class WebSocketConnectionMiddleware : IMiddleware
     {
         private readonly IDirectLineConnectionManager _connectionManager;
+        private readonly ILogger<WebSocketConnectionMiddleware> _logger;
 
-        public WebSocketConnectionMiddleware(IDirectLineConnectionManager connectionManager)
+        public WebSocketConnectionMiddleware(IDirectLineConnectionManager connectionManager,ILogger<WebSocketConnectionMiddleware> logger)
         {
             this._connectionManager = connectionManager;
+            this._logger = logger;
         }
 
 
@@ -31,6 +36,13 @@ namespace Itminus.InDirectLine.Middlewares
                 var conversaionId = m.Groups["conversationId"].Value;
                 if (context.WebSockets.IsWebSocketRequest)
                 {
+                    if(context.User==null)
+                    {
+                        this._logger.LogInformation($"token={context.Request.Query["t"]} is not valid when trying to establish a websocket connection");
+                        context.Response.StatusCode = 401;
+                        return;
+                    }
+                    var token = context.Request.Query["t"].FirstOrDefault();
                     WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
                     // register connection 
                     var conn = new WebSocketDirectLineConnection(webSocket);

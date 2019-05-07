@@ -13,6 +13,7 @@ namespace Itminus.InDirectLine.Services
             services.AddSingleton<IConversationHistoryStore, InMemoryConversationHistoryStore>();
             services.AddSingleton<IDirectLineConnection,WebSocketDirectLineConnection>();
             services.AddSingleton<IDirectLineConnectionManager,DirectLineConnectionManager>();
+            services.AddSingleton<TokenBuilder>();
             // services.AddHostedService<DirectLineConnectionHostedService>();
             return services.AddScoped<DirectLineHelper>();
         }

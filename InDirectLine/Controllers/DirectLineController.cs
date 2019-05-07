@@ -14,6 +14,8 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Itminus.InDirectLine.Controllers{
 
@@ -23,13 +25,15 @@ namespace Itminus.InDirectLine.Controllers{
         private ILogger<DirectLineController> _logger;
         private readonly DirectLineHelper _helper;
         private readonly IDirectLineConnectionManager _connectionManager;
+        private readonly TokenBuilder _tokenBuilder;
         private InDirectLineOptions _inDirectlineOption;
 
-        public DirectLineController(ILogger<DirectLineController> logger, IOptions<InDirectLineOptions> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager)
+        public DirectLineController(ILogger<DirectLineController> logger, IOptions<InDirectLineOptions> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager,TokenBuilder tokenBuilder)
         {
             this._logger= logger;
             this._helper = helper;
             this._connectionManager = connectionManager;
+            this._tokenBuilder = tokenBuilder;
             this._inDirectlineOption = opt.Value;
         }
 
@@ -48,23 +52,32 @@ namespace Itminus.InDirectLine.Controllers{
         {
             var result= await this._helper.CreateNewConversation();
             var conversationId = result.Activity.Conversation.Id;
+
+            var claims = new List<Claim>();
+
+            var expiresIn = this._inDirectlineOption.TokenExpiresIn ;
+            var token = this._tokenBuilder.BuildToken(conversationId,claims,expiresIn);
+
+            var mustBeConnectedIn = this._inDirectlineOption.StreamUrlMustBeConnectedIn;
+            var streamUrlToken = this._tokenBuilder.BuildToken(conversationId,claims,mustBeConnectedIn);
                 
             return new OkObjectResult(new DirectLineConversation{
                 ConversationId = conversationId,
-                ExpiresIn= this._inDirectlineOption.ExpiresIn,
-                Token = Request.Headers["Authentication"],
-                StreamUrl= $"ws://localhost:3000/v3/directline/conversations/{conversationId}/stream?t=RCurR_XV9ZA.cwA..."
+                ExpiresIn= expiresIn,
+                Token = token,
+                StreamUrl= $"ws://localhost:3000/v3/directline/conversations/{conversationId}/stream?t={streamUrlToken}"
             });
         }
 
 
         //
         [HttpGet("v3/[controller]/conversations/{conversationId}")]
+        [Authorize]
         public IActionResult ConversationInfo(string conversationId)
         {
             return new OkObjectResult(new DirectLineConversation{
                 ConversationId = conversationId,
-                ExpiresIn= this._inDirectlineOption.ExpiresIn,
+                ExpiresIn= this._inDirectlineOption.TokenExpiresIn,
                 Token = Request.Headers["Authentication"],
                 StreamUrl= $"ws://localhost:3000/v3/directline/conversations/{conversationId}/stream?t=RCurR_XV9ZA.cwA..."
             });
@@ -72,6 +85,7 @@ namespace Itminus.InDirectLine.Controllers{
 
         //
         [HttpGet("v3/[controller]/conversations/{conversationId}/activities")]
+        [Authorize]
         public async Task<IActionResult> ShowActivitiesToClient([FromRoute]string conversationId, [FromQuery]string watermark)
         {
 
@@ -92,6 +106,7 @@ namespace Itminus.InDirectLine.Controllers{
         }
 
         [HttpPost("v3/[controller]/conversations/{conversationId}/activities")]
+        [Authorize]
         public async Task<IActionResult> SendActivityToBot([FromRoute]string conversationId, [FromBody] Activity activity)
         {
             var conversationExists = await this._helper.ConversationHistoryExistsAsync(conversationId);
@@ -125,6 +140,7 @@ namespace Itminus.InDirectLine.Controllers{
         /// <param name="conversationId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpPost("v3/[controller]/conversations/{conversationId}/upload")]
         public async Task<IActionResult> ReceiveAttachmentsFromClient([FromRoute]string conversationId,[FromQuery]string userId,[FromForm]IList<IFormFile> file)
         {

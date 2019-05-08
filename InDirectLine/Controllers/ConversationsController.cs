@@ -31,7 +31,7 @@ namespace Itminus.InDirectLine.Controllers
         }
 
         [HttpGet("v3/[controller]")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             // todo
             return Ok();
@@ -77,14 +77,14 @@ namespace Itminus.InDirectLine.Controllers
         }
 
         [HttpPost("v3/[controller]/{conversationId}/members")]
-        public async Task<IActionResult> ConversationMembers([FromRoute] string conversationId)
+        public IActionResult ConversationMembers([FromRoute] string conversationId)
         {
             // not implemented
             return new OkResult();
         }
 
         [HttpPost("v3/[controller]/{conversationId}/activities/{activityId}/members")]
-        public async Task<IActionResult> ActivityMembers([FromRoute] string conversationId)
+        public IActionResult ActivityMembers([FromRoute] string conversationId)
         {
             // not implemented
             return new OkResult();

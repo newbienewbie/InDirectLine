@@ -96,7 +96,7 @@ namespace Itminus.InDirectLine.Controllers{
             int normailizedWatermark=0; 
             try{
                 normailizedWatermark= int.Parse(watermark);
-            }catch(Exception e){
+            }catch(Exception ){
                 normailizedWatermark = 0;
             }
             //get converation by id

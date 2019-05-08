@@ -5,7 +5,7 @@ For example, test [webchat](https://github.com/Microsoft/BotFramework-WebChat) w
 
 ## How it works
 
-Actually, the DirectLine is a bridge that connects your bot and your client. This project (`InDirectLine`) is a custom implementation of my own.
+Actually, the `DirectLine` is a **bridge** that connects your bot and your client. This project (`InDirectLine`) is a custom implementation of my own written in [ASP.NET Core](https://github.com/aspnet/AspNetCore).
 
 For more details, see [Direct Line API 3.0](https://docs.microsoft.com/en-us/azure/bot-service/rest-api/bot-framework-rest-direct-line-3-0-concepts?view=azure-bot-service-4.0)
 
@@ -44,7 +44,9 @@ Create a `directLine` by `WebChat.createDirectLine()` :
     }, document.getElementById('webchat'));
 </script>
 ```
-This will use websocket by default. If you want a `REST` way, set the `webSocket=false`:
+Note the `domain` has no trailing slash `/`. 
+
+The webchat will use websocket by default. If you want a `REST` way, set the `webSocket=false`:
 
 ```javascript
     var directLine = window.WebChat.createDirectLine({
@@ -53,3 +55,13 @@ This will use websocket by default. If you want a `REST` way, set the `webSocket
         webSocket:false, 
     });
 ```
+
+### `InDirectLine` Configuration
+
+The `InDirectLine` reads the `appsettings.json` file by default, which means it will listen on `http://localhost:3000` and assumes that the `http://127.0.0.1:3978/api/messages` is the bot message endpoint.
+
+You could create a `appsettings.Development.json` or a `appsettings.Production.json` and configure the options as you like. 
+
+Also you could pass the settings by [command line arguments](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.2#arguments) or by [environment variables](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.2#environment-variables-configuration-provider). 
+
+For more details, see [Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/).

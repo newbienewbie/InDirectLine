@@ -16,6 +16,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Itminus.InDirectLine.Controllers{
 
@@ -26,14 +27,16 @@ namespace Itminus.InDirectLine.Controllers{
         private readonly DirectLineHelper _helper;
         private readonly IDirectLineConnectionManager _connectionManager;
         private readonly TokenBuilder _tokenBuilder;
+        private readonly IHostingEnvironment _env;
         private InDirectLineOptions _inDirectlineOption;
 
-        public DirectLineController(ILogger<DirectLineController> logger, IOptions<InDirectLineOptions> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager,TokenBuilder tokenBuilder)
+        public DirectLineController(ILogger<DirectLineController> logger, IOptions<InDirectLineOptions> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager,TokenBuilder tokenBuilder, IHostingEnvironment env)
         {
             this._logger= logger;
             this._helper = helper;
             this._connectionManager = connectionManager;
             this._tokenBuilder = tokenBuilder;
+            this._env = env;
             this._inDirectlineOption = opt.Value;
         }
 
@@ -154,11 +157,12 @@ namespace Itminus.InDirectLine.Controllers{
                 });
             }
             var serviceUrl = this._inDirectlineOption.ServiceUrl;
-            IList<Attachment> attachments = file.Select(f => new Attachment(){
-                ContentUrl = serviceUrl+"/attachments/"+f.Name,
-                ContentType = Request.ContentType,
-                Name = f.Name,
-            }).ToList();
+            IList<Attachment> attachments = new List<Attachment>(); 
+            foreach(var f in file)
+            {
+                var attachment= await this.HandleAttachment(f,conversationId);
+                attachments.Add(attachment);
+            }
 
             Activity activity=null;
             var activityStream = Request.Form.Files["activity"]?.OpenReadStream();
@@ -179,6 +183,48 @@ namespace Itminus.InDirectLine.Controllers{
             return new OkObjectResult(new ResourceResponse{
                 Id = activity.Id,
             });
+        }
+
+
+        /// <summary>
+        /// copy attachment to required directory & construct an instance of Attachment
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="subdirectory"></param>
+        /// <returns></returns>
+        private async Task<Attachment> HandleAttachment(IFormFile file,string subdirectory)
+        {
+            var pathSegs = new string[]{
+                this._env.ContentRootPath , 
+                this._inDirectlineOption.Attachments.BaseDirectoryForUploading,
+                subdirectory,
+            };
+            var destDir = Path.Combine(pathSegs);
+
+            if(!Directory.Exists(destDir))
+                Directory.CreateDirectory(destDir);
+
+            var contentUrlBaseStr= new string[]{ 
+                    this._inDirectlineOption.ServiceUrl,
+                    this._inDirectlineOption.Attachments.BaseUrlForDownloading,
+                    subdirectory,
+                }
+                .Select(s => s.Trim('/'))
+                .Aggregate((state, current)=>{
+                    return $"{state}/{current}";
+                });
+            var contentUrlBase=new Uri(contentUrlBaseStr);
+
+            using(var f = System.IO.File.OpenWrite(Path.Combine(destDir,file.FileName)))
+            {
+                await file.CopyToAsync(f);
+                return new Attachment(){
+                    ContentUrl = new Uri($"{contentUrlBase}/{file.FileName}").AbsoluteUri,
+                    ContentType = Request.ContentType,
+                    Name = file.FileName,
+                };
+            }
+
         }
 
     }

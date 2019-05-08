@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Itminus.InDirectLine
@@ -101,6 +103,22 @@ namespace Itminus.InDirectLine
             webSocketOptions.AllowedOrigins.Add("*");
             app.UseWebSockets(webSocketOptions);
             app.UseMiddleware<WebSocketConnectionMiddleware>();
+
+
+
+            var baseDirOfAttachments = Path.Combine(env.ContentRootPath, Configuration["DirectLine:Attachments:BaseDirectoryForUploading"]);
+            var requestPath = Configuration["DirectLine:Attachments:BaseUrlForDownloading"];
+            requestPath = requestPath.StartsWith("/")? requestPath : "/"+requestPath;
+            if(!Directory.Exists( baseDirOfAttachments))
+                Directory.CreateDirectory(baseDirOfAttachments);
+
+            var fileProvider = new PhysicalFileProvider(baseDirOfAttachments){ };  //todo : file filter
+            var so = new StaticFileOptions(){
+                RequestPath= requestPath,
+                FileProvider = fileProvider,
+            };
+            app.UseStaticFiles(so);
+
 
             app.UseMvc(routes =>
             {

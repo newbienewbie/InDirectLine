@@ -1,8 +1,0 @@
-
-
-POST http://127.0.0.1:3000/v3/conversations/2fa42620-e0c1-4b4c-b827-2478b1f2f99d/activities/923b7fd2-201f-4c9f-917f-45f8e5d42c92
-Content-Type: application/json
-
-{
-    "id":"adb"
-}

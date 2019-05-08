@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Itminus.InDirectLine.Middlewares;
 using Itminus.InDirectLine.Services;
+using Itminus.InDirectLine.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,23 +37,11 @@ namespace Itminus.InDirectLine
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddInDirectLine(o => {
-                o.ServiceUrl = "http://127.0.0.1:3000";
-            });
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CORS-InDirectLine",
-                builder =>
-                {
-                    builder.WithOrigins("http://localhost:3978" );
-                    builder.AllowAnyOrigin();
-                    builder.AllowAnyHeader();
-                    builder.AllowAnyMethod();
-                });
-            });
+            var directlineConfig=Configuration.GetSection("DirectLine");
+            services.AddInDirectLine(directlineConfig);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddScoped<WebSocketConnectionMiddleware>();
+
             services.AddAuthentication(opt =>{
                     opt.DefaultAuthenticateScheme= JwtBearerDefaults.AuthenticationScheme;
                     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -106,7 +95,9 @@ namespace Itminus.InDirectLine
                 ReceiveBufferSize = 4 * 1024
             };
 
-            webSocketOptions.AllowedOrigins.Add("http://localhost:3978");
+            var botEndPoint = Configuration["DirectLine:BotEndPoint"];
+            var botOrigin = UtilsEx.GetOrigin(botEndPoint);
+            webSocketOptions.AllowedOrigins.Add(botOrigin);
             webSocketOptions.AllowedOrigins.Add("*");
             app.UseWebSockets(webSocketOptions);
             app.UseMiddleware<WebSocketConnectionMiddleware>();

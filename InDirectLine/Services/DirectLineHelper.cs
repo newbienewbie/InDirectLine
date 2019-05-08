@@ -27,7 +27,7 @@ namespace Itminus.InDirectLine.Services
         /// <returns></returns>
         public string GetBotMessageEndpointUrl()
         {
-            return "http://127.0.0.1:3978/api/messages";
+            return this._opt.BotEndpoint;
         }
 
         public DirectLineHelper(IOptions<InDirectLineOptions> opt , IHttpClientFactory clientFactory, IConversationHistoryStore history)

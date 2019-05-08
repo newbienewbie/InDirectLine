@@ -13,9 +13,9 @@ For more details, see [Direct Line API 3.0](https://docs.microsoft.com/en-us/azu
 
 * [x] REST API for normal messages
 * [x] WebSocket support
-* [ ] Attachment support
+* [x] Attachment support
     * [X] Basic support : allow uploading
-    * [ ] allow download
+    * [x] allow download
 * [ ] Persistene Layer & InMemory storage & clean up resources automatically
 * [ ] Security
     * [x] Token Generate & Refresh API

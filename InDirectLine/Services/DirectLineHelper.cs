@@ -38,9 +38,9 @@ namespace Itminus.InDirectLine.Services
         }
 
 
-        internal async Task<CreateNewConversationResult> CreateNewConversation()
+        internal async Task<CreateNewConversationResult> CreateNewConversationWithId(string conversationId)
         {
-            var activity= CreateNewConversationUpdateActivity();
+            var activity= CreateNewConversationUpdateActivity(conversationId);
             // persist this conversation to history store
             await this._history.CreateConversationIfNotExistsAsync(activity.Conversation.Id);
 
@@ -57,9 +57,9 @@ namespace Itminus.InDirectLine.Services
             public HttpStatusCode StatusCode{get;set;}
         }
 
-        private IConversationUpdateActivity CreateNewConversationUpdateActivity()
+        private IConversationUpdateActivity CreateNewConversationUpdateActivity(string conversationId)
         {
-            var conversationId = Guid.NewGuid().ToString();
+            conversationId = string.IsNullOrEmpty(conversationId)? Guid.NewGuid().ToString(): conversationId;
             var serviceUrl  = this._opt.ServiceUrl;
 
             var activity = new Activity{

@@ -47,11 +47,14 @@ namespace Itminus.InDirectLine.Controllers{
         /// Create a new conversation
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         [HttpPost("v3/[controller]/conversations")]
         public async Task<IActionResult> Conversations()
         {
-            var result= await this._helper.CreateNewConversation();
-            var conversationId = result.Activity.Conversation.Id;
+            var conversationId = HttpContext.User?.Claims.FirstOrDefault(c => c.Type== TokenBuilder.ClaimTypeConversationID)?.Value;
+            var result= await this._helper.CreateNewConversationWithId(conversationId);
+            // make sure the conversationId is created if null or empty
+            conversationId = result.Activity.Conversation.Id;
 
             var claims = new List<Claim>();
             claims.Add(new Claim(TokenBuilder.ClaimTypeConversationID, conversationId));

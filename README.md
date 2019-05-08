@@ -18,8 +18,8 @@ For more details, see [Direct Line API 3.0](https://docs.microsoft.com/en-us/azu
     * [ ] allow download
 * [ ] Persistene Layer & InMemory storage & clean up resources automatically
 * [ ] Security
+    * [x] Token Generate & Refresh API
     * [x] Any user can only access his own conversation data
-    * [ ] Token Generate & Refresh API
     * [ ] Support secret & token at the same time
 
 ## How to Use
@@ -30,18 +30,20 @@ Create a `directLine` by `WebChat.createDirectLine()` :
 <div id="webchat" role="main"></div>
 <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat-minimal.js"></script>
 <script>
-    var directLine = window.WebChat.createDirectLine({
-        domain: "http://localhost:3000/v3/directline",
-        token: 'YOUR_DIRECT_LINE_TOKEN',
-    });
-    window.WebChat.renderWebChat({
-        directLine: directLine,
-        userID: 'YOUR_USER_ID',
-        username: 'Web Chat User',
-        locale: 'en-US',
-        botAvatarInitials: 'Bot',
-        userAvatarInitials: 'Me'
-    }, document.getElementById('webchat'));
+    fetch('http://localhost:3000/v3/directline/token/generate', { method: 'POST' })
+        .then(res => res.json())
+        .then(res => {
+            var directLine = window.WebChat.createDirectLine({
+                domain: "http://localhost:3000/v3/directline",
+                token: res.token,
+            });
+            window.WebChat.renderWebChat({
+                directLine: directLine,
+                userID: 'YOUR_USER_ID',
+                username: 'Web Chat User',
+                locale: 'en-US',
+            }, document.getElementById('webchat'));
+        });
 </script>
 ```
 Note the `domain` has no trailing slash `/`. 

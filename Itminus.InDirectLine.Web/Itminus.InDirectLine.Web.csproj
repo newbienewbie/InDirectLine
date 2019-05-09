@@ -15,7 +15,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\Itminus.InDirectLine\Itminus.InDirectLine.csproj" />
+    <ProjectReference Include="..\Itminus.InDirectLine.Core\Itminus.InDirectLine.Core.csproj" />
   </ItemGroup>
 
 </Project>

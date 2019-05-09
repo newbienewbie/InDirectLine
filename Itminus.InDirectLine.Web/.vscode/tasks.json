@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/Itminus.Indirectline.csproj"
+                "${workspaceFolder}/Itminus.InDirectLine.Web.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -17,7 +17,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/Itminus.Indirectline.csproj"
+                "${workspaceFolder}/Itminus.InDirectLine.Web.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -28,7 +28,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/Itminus.Indirectline.csproj"
+                "${workspaceFolder}/Itminus.InDirectLine.Web.csproj"
             ],
             "problemMatcher": "$tsc"
         }

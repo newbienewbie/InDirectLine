@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 
-namespace Itminus.InDirectLine.integrationSample.Bots
+namespace Itminus.InDirectLine.IntegrationSample.Bots
 {
     public class EchoBot : ActivityHandler
     {

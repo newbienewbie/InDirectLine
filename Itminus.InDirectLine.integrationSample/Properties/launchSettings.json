@@ -16,7 +16,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Itminus.InDirectLine.integrationSample": {
+    "Itminus.InDirectLine.IntegrationSample": {
       "commandName": "Project",
       "launchBrowser": true,
       "applicationUrl": "https://localhost:3979;http://localhost:3978",

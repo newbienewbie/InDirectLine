@@ -12,14 +12,14 @@ using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using Itminus.InDirectLine.integrationSample.Bots;
+using Itminus.InDirectLine.IntegrationSample.Bots;
 using Itminus.InDirectLine.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Itminus.InDirectLine.integrationSample
+namespace Itminus.InDirectLine.IntegrationSample
 {
     public class Startup
     {

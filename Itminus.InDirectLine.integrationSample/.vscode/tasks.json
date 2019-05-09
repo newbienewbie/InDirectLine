@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/Itminus.InDirectLine.integrationSample.csproj"
+                "${workspaceFolder}/Itminus.InDirectLine.IntegrationSample.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -17,7 +17,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/Itminus.InDirectLine.integrationSample.csproj"
+                "${workspaceFolder}/Itminus.InDirectLine.IntegrationSample.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -28,7 +28,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/Itminus.InDirectLine.integrationSample.csproj"
+                "${workspaceFolder}/Itminus.InDirectLine.IntegrationSample.csproj"
             ],
             "problemMatcher": "$tsc"
         }

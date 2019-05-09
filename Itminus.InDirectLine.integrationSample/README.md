@@ -1,4 +1,4 @@
-﻿# Itminus.InDirectLine.integrationSample
+﻿# Itminus.InDirectLine.IntegrationSample
 Bot Framework v4 echo bot sample.
 
 This bot has been created using [Bot Framework][1], it shows how to create a simple bot that accepts input from the user and echoes it back.
@@ -11,10 +11,10 @@ This bot has been created using [Bot Framework][1], it shows how to create a sim
 	```
 
 # To try this sample
-- In a terminal, navigate to `Itminus.InDirectLine.integrationSample`
+- In a terminal, navigate to `Itminus.InDirectLine.IntegrationSample`
     ```bash
     # change into project folder
-	cd Itminus.InDirectLine.integrationSample
+	cd Itminus.InDirectLine.IntegrationSample
     ```
 - Run the bot from a terminal or from Visual Studio, choose option A or B.
 
@@ -27,8 +27,8 @@ This bot has been created using [Bot Framework][1], it shows how to create a sim
 	B) Or from Visual Studio
 	- Launch Visual Studio
 	- File -> Open -> Project/Solution
-	- Navigate to `Itminus.InDirectLine.integrationSample` folder
-	- Select `Itminus.InDirectLine.integrationSample.csproj` file
+	- Navigate to `Itminus.InDirectLine.IntegrationSample` folder
+	- Select `Itminus.InDirectLine.IntegrationSample.csproj` file
 	- Press `F5` to run the project
 
 # Testing the bot using Bot Framework Emulator

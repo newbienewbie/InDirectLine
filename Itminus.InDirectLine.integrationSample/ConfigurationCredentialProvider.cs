@@ -6,7 +6,7 @@
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Extensions.Configuration;
 
-namespace Itminus.InDirectLine.integrationSample
+namespace Itminus.InDirectLine.IntegrationSample
 {
     public class ConfigurationCredentialProvider : SimpleCredentialProvider
     {

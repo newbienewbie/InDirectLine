@@ -6,7 +6,7 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Itminus.InDirectLine.IntegrationSample
+namespace Itminus.InDirectLine.IntegrationBotSample
 {
     public class Program
     {

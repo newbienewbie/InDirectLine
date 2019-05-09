@@ -1,13 +1,14 @@
 using System;
 using Itminus.InDirectLine.Authorization;
 using Itminus.InDirectLine.Middlewares;
+using Itminus.InDirectLine.Services;
 using Itminus.InDirectLine.Services.IDirectLineConnections;
 using Itminus.InDirectLine.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Itminus.InDirectLine.Services
+namespace Itminus.InDirectLine.Core
 {
     public static class ServiceCollectionExtension
     {
@@ -26,19 +27,19 @@ namespace Itminus.InDirectLine.Services
 
             var botEndPointUri= UtilsEx.GetOrigin(directlineConfig["BotEndPoint"]);
             services.AddSingleton<IAuthorizationHandler,MatchConversationAuthzHandler>();
-                        services.AddCors(options =>
+            services.AddCors(options =>
             {
-                options.AddPolicy("CORS-InDirectLine",
-                builder =>
-                {
-                    builder.WithOrigins(botEndPointUri);
-                    builder.AllowAnyOrigin();
-                    builder.AllowAnyHeader();
-                    builder.AllowAnyMethod();
-                });
+                options.AddPolicy(
+                    InDirectLineDefaults.CorsPolicyNames,
+                    builder =>{
+                        builder.WithOrigins(botEndPointUri);
+                        builder.AllowAnyOrigin();
+                        builder.AllowAnyHeader();
+                        builder.AllowAnyMethod();
+                    }
+                );
             });
             services.AddScoped<WebSocketConnectionMiddleware>();
-            // services.AddHostedService<DirectLineConnectionHostedService>();
             return services.AddScoped<DirectLineHelper>();
         }
     }

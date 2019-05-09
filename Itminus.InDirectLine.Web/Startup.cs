@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using Itminus.InDirectLine.Core;
 
 namespace Itminus.InDirectLine
 {
@@ -85,39 +86,15 @@ namespace Itminus.InDirectLine
                 app.UseHsts();
             }
 
-            app.UseCors("CORS-InDirectLine");
+            app.UseInDirectLineCors();
+
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
 
-            var webSocketOptions = new WebSocketOptions()
-            {
-                KeepAliveInterval = TimeSpan.FromSeconds(120),
-                ReceiveBufferSize = 4 * 1024
-            };
-
-            var botEndPoint = Configuration["DirectLine:BotEndPoint"];
-            var botOrigin = UtilsEx.GetOrigin(botEndPoint);
-            webSocketOptions.AllowedOrigins.Add(botOrigin);
-            webSocketOptions.AllowedOrigins.Add("*");
-            app.UseWebSockets(webSocketOptions);
-            app.UseMiddleware<WebSocketConnectionMiddleware>();
-
-
-
-            var baseDirOfAttachments = Path.Combine(env.ContentRootPath, Configuration["DirectLine:Attachments:BaseDirectoryForUploading"]);
-            var requestPath = Configuration["DirectLine:Attachments:BaseUrlForDownloading"];
-            requestPath = requestPath.StartsWith("/")? requestPath : "/"+requestPath;
-            if(!Directory.Exists( baseDirOfAttachments))
-                Directory.CreateDirectory(baseDirOfAttachments);
-
-            var fileProvider = new PhysicalFileProvider(baseDirOfAttachments){ };  //todo : file filter
-            var so = new StaticFileOptions(){
-                RequestPath= requestPath,
-                FileProvider = fileProvider,
-            };
-            app.UseStaticFiles(so);
+            app.UseInDirectLineUploadsStatic();
+            app.UseInDirectLineCore();
 
 
             app.UseMvc(routes =>

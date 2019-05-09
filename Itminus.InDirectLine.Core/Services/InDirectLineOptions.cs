@@ -1,4 +1,4 @@
-namespace Itminus.InDirectLine.Services{
+namespace Itminus.InDirectLine.Core.Services{
 
 
     public class InDirectLineOptions{

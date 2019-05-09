@@ -1,4 +1,4 @@
-namespace Itminus.InDirectLine
+namespace Itminus.InDirectLine.Core
 {
     internal class  InDirectLineDefaults
     {

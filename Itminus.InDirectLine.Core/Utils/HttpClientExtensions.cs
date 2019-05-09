@@ -3,7 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Itminus.InDirectLine.Utils
+namespace Itminus.InDirectLine.Core.Utils
 {
     public static class HttpClientExtensions
     {

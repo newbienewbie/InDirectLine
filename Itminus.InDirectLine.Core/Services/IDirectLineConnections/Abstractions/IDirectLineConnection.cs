@@ -3,7 +3,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Itminus.InDirectLine.Services.IDirectLineConnections
+namespace Itminus.InDirectLine.Core.Services.IDirectLineConnections
 {
     public interface IDirectLineConnection
     {

@@ -9,13 +9,13 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Itminus.InDirectLine.Services
+namespace Itminus.InDirectLine.Core.Services
 {
     public class TokenBuilder
     {
         private readonly IConfiguration _config;
 
-        public const string ClaimTypeConversationID = "Claim_Type:Itminus.InDirectLine:ConversationID";
+        public const string ClaimTypeConversationID = "Claim_Type:Itminus.InDirectLine.Core:ConversationID";
 
         public TokenBuilder(IConfiguration config)
         {

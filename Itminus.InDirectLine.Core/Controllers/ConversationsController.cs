@@ -2,16 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Itminus.InDirectLine.Services.IDirectLineConnections;
-using Itminus.InDirectLine.Models;
-using Itminus.InDirectLine.Services;
+using Itminus.InDirectLine.Core.Services.IDirectLineConnections;
+using Itminus.InDirectLine.Core.Models;
+using Itminus.InDirectLine.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
-namespace Itminus.InDirectLine.Controllers
+namespace Itminus.InDirectLine.Core.Controllers
 {
 
     [ApiController]

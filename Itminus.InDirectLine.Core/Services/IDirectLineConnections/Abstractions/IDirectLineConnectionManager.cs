@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Itminus.InDirectLine.Models;
+using Itminus.InDirectLine.Core.Models;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
 
-namespace Itminus.InDirectLine.Services.IDirectLineConnections
+namespace Itminus.InDirectLine.Core.Services.IDirectLineConnections
 {
 
     public interface IDirectLineConnectionManager

@@ -1,12 +1,12 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Itminus.InDirectLine.Models;
-using Itminus.InDirectLine.Services.IDirectLineConnections;
+using Itminus.InDirectLine.Core.Models;
+using Itminus.InDirectLine.Core.Services.IDirectLineConnections;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
 
-namespace Itminus.InDirectLine.Services.IDirectLineConnections
+namespace Itminus.InDirectLine.Core.Services.IDirectLineConnections
 {
     public static class IDirectLineConnectionManagerExtension
     {

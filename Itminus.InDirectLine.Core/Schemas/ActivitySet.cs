@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Itminus.InDirectLine.Utils;
+using Itminus.InDirectLine.Core.Utils;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
 
-namespace Itminus.InDirectLine.Models
+namespace Itminus.InDirectLine.Core.Models
 {
 
     public class ActivitySet

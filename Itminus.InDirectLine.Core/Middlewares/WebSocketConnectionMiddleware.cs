@@ -1,5 +1,5 @@
-﻿using Itminus.InDirectLine.Services;
-using Itminus.InDirectLine.Services.IDirectLineConnections;
+﻿using Itminus.InDirectLine.Core.Services;
+using Itminus.InDirectLine.Core.Services.IDirectLineConnections;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Itminus.InDirectLine.Middlewares
+namespace Itminus.InDirectLine.Core.Middlewares
 {
     public class WebSocketConnectionMiddleware : IMiddleware
     {

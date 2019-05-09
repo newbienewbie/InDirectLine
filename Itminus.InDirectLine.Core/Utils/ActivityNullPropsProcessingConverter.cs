@@ -6,7 +6,7 @@ using Newtonsoft.Json.Serialization;
 
 
 
-namespace Itminus.InDirectLine.Utils
+namespace Itminus.InDirectLine.Core.Utils
 {
 
     public class ActivityNullPropsProcessingConverter : JsonConverter 

@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Itminus.InDirectLine.Services.IDirectLineConnections;
-using Itminus.InDirectLine.Models;
-using Itminus.InDirectLine.Services;
+using Itminus.InDirectLine.Core.Services.IDirectLineConnections;
+using Itminus.InDirectLine.Core.Models;
+using Itminus.InDirectLine.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
@@ -18,7 +18,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Itminus.InDirectLine.Controllers{
+namespace Itminus.InDirectLine.Core.Controllers{
 
     [ApiController]
     public class DirectLineController : Controller

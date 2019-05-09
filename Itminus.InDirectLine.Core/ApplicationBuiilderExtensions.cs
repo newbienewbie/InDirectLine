@@ -2,9 +2,9 @@
 
 using System;
 using System.IO;
-using Itminus.InDirectLine.Middlewares;
-using Itminus.InDirectLine.Services;
-using Itminus.InDirectLine.Utils;
+using Itminus.InDirectLine.Core.Middlewares;
+using Itminus.InDirectLine.Core.Services;
+using Itminus.InDirectLine.Core.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Builder.Internal;
 using Microsoft.AspNetCore.Hosting;

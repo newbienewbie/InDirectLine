@@ -1,9 +1,9 @@
 using System;
-using Itminus.InDirectLine.Authorization;
-using Itminus.InDirectLine.Middlewares;
-using Itminus.InDirectLine.Services;
-using Itminus.InDirectLine.Services.IDirectLineConnections;
-using Itminus.InDirectLine.Utils;
+using Itminus.InDirectLine.Core.Authorization;
+using Itminus.InDirectLine.Core.Middlewares;
+using Itminus.InDirectLine.Core.Services;
+using Itminus.InDirectLine.Core.Services.IDirectLineConnections;
+using Itminus.InDirectLine.Core.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -6,7 +6,7 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Itminus.InDirectLine.Services.IDirectLineConnections
+namespace Itminus.InDirectLine.Core.Services.IDirectLineConnections
 {
     public class DirectLineConnectionManager : IDirectLineConnectionManager
     {

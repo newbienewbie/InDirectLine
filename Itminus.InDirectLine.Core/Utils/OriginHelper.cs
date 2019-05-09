@@ -1,7 +1,7 @@
 
 using System;
 
-namespace Itminus.InDirectLine.Utils
+namespace Itminus.InDirectLine.Core.Utils
 {
     public static class UtilsEx
     {

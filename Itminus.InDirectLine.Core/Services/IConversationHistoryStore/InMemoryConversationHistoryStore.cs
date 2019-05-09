@@ -2,10 +2,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Itminus.InDirectLine.Models;
+using Itminus.InDirectLine.Core.Models;
 using Microsoft.Bot.Schema;
 
-namespace Itminus.InDirectLine.Services
+namespace Itminus.InDirectLine.Core.Services
 {
     public class InMemoryConversationHistoryStore : IConversationHistoryStore
     {

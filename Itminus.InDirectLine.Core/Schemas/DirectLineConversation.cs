@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
 
-namespace Itminus.InDirectLine.Models
+namespace Itminus.InDirectLine.Core.Models
 {
 
     public class DirectLineConversation

@@ -3,12 +3,12 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Itminus.InDirectLine.Services;
+using Itminus.InDirectLine.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 
-namespace Itminus.InDirectLine.Authorization
+namespace Itminus.InDirectLine.Core.Authorization
 {
     public class MatchConversationAuthzHandler : AuthorizationHandler<MatchConversationAuthzRequirement>
     {

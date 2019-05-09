@@ -20,15 +20,15 @@ using Microsoft.AspNetCore.Authorization;
 namespace Itminus.InDirectLine.Controllers{
 
     [ApiController]
-    public class TokenController : Controller
+    public class TokensController : Controller
     {
-        private ILogger<TokenController> _logger;
+        private ILogger<TokensController> _logger;
         private readonly DirectLineHelper _helper;
         private readonly IDirectLineConnectionManager _connectionManager;
         private readonly TokenBuilder _tokenBuilder;
         private InDirectLineOptions _inDirectlineOption;
 
-        public TokenController(ILogger<TokenController> logger, IOptions<InDirectLineOptions> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager,TokenBuilder tokenBuilder)
+        public TokensController(ILogger<TokensController> logger, IOptions<InDirectLineOptions> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager,TokenBuilder tokenBuilder)
         {
             this._logger= logger;
             this._helper = helper;

@@ -30,7 +30,7 @@ Create a `directLine` by `WebChat.createDirectLine()` :
 <div id="webchat" role="main"></div>
 <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat-minimal.js"></script>
 <script>
-    fetch('http://localhost:3000/v3/directline/token/generate', { method: 'POST' })
+    fetch('http://localhost:3000/v3/directline/tokens/generate', { method: 'POST' })
         .then(res => res.json())
         .then(res => {
             var directLine = window.WebChat.createDirectLine({

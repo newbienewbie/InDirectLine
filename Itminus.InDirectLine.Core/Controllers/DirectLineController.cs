@@ -17,6 +17,7 @@ using System.IO;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Itminus.InDirectLine.Core.Utils;
 
 namespace Itminus.InDirectLine.Core.Controllers{
 
@@ -67,12 +68,14 @@ namespace Itminus.InDirectLine.Core.Controllers{
 
             var mustBeConnectedIn = this._inDirectlineOption.StreamUrlMustBeConnectedIn;
             var streamUrlToken = this._tokenBuilder.BuildToken(conversationId,claims,mustBeConnectedIn);
+
+            var origin = UtilsEx.GetWebSocketOrigin(this._inDirectlineOption.ServiceUrl);
                 
             return new OkObjectResult(new DirectLineConversation{
                 ConversationId = conversationId,
                 ExpiresIn= expiresIn,
                 Token = token,
-                StreamUrl= $"ws://localhost:3000/v3/directline/conversations/{conversationId}/stream?t={streamUrlToken}"
+                StreamUrl= $"{origin}/v3/directline/conversations/{conversationId}/stream?t={streamUrlToken}"
             });
         }
 

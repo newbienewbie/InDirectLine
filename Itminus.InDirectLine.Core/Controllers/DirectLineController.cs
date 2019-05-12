@@ -49,10 +49,11 @@ namespace Itminus.InDirectLine.Core.Controllers{
 
         /// <summary>
         /// Create a new conversation
+        /// If there's no conversation associated with the current User's token, create a new conversation
         /// </summary>
         /// <returns></returns>
-        [Authorize]
         [HttpPost("v3/[controller]/conversations")]
+        [Authorize(AuthenticationSchemes=InDirectLineDefaults.AuthenticationSchemeName)]
         public async Task<IActionResult> Conversations()
         {
             var conversationId = HttpContext.User?.Claims.FirstOrDefault(c => c.Type== TokenBuilder.ClaimTypeConversationID)?.Value;
@@ -82,7 +83,7 @@ namespace Itminus.InDirectLine.Core.Controllers{
 
         //
         [HttpGet("v3/[controller]/conversations/{conversationId}")]
-        [Authorize("MatchConversation")]
+        [Authorize(Policy="MatchConversation", AuthenticationSchemes=InDirectLineDefaults.AuthenticationSchemeName)]
         public IActionResult ConversationInfo(string conversationId)
         {
             return new OkObjectResult(new DirectLineConversation{
@@ -95,7 +96,7 @@ namespace Itminus.InDirectLine.Core.Controllers{
 
         //
         [HttpGet("v3/[controller]/conversations/{conversationId}/activities")]
-        [Authorize("MatchConversation")]
+        [Authorize(Policy="MatchConversation", AuthenticationSchemes=InDirectLineDefaults.AuthenticationSchemeName)]
         public async Task<IActionResult> ShowActivitiesToClient([FromRoute]string conversationId, [FromQuery]string watermark)
         {
 
@@ -116,7 +117,7 @@ namespace Itminus.InDirectLine.Core.Controllers{
         }
 
         [HttpPost("v3/[controller]/conversations/{conversationId}/activities")]
-        [Authorize("MatchConversation")]
+        [Authorize(Policy="MatchConversation", AuthenticationSchemes=InDirectLineDefaults.AuthenticationSchemeName)]
         public async Task<IActionResult> SendActivityToBot([FromRoute]string conversationId, [FromBody] Activity activity)
         {
             var conversationExists = await this._helper.ConversationHistoryExistsAsync(conversationId);
@@ -150,7 +151,7 @@ namespace Itminus.InDirectLine.Core.Controllers{
         /// <param name="conversationId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        [Authorize("MatchConversation")]
+        [Authorize(Policy="MatchConversation", AuthenticationSchemes=InDirectLineDefaults.AuthenticationSchemeName)]
         [HttpPost("v3/[controller]/conversations/{conversationId}/upload")]
         public async Task<IActionResult> ReceiveAttachmentsFromClient([FromRoute]string conversationId,[FromQuery]string userId,[FromForm]IList<IFormFile> file)
         {

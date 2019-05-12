@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Threading.Tasks;
+using Itminus.InDirectLine.Core.Authentication;
 
 namespace Itminus.InDirectLine.IntegrationBotSample
 {
@@ -44,34 +45,11 @@ namespace Itminus.InDirectLine.IntegrationBotSample
             // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
             services.AddTransient<IBot, EchoBot>();
 
-                        var directlineConfig=Configuration.GetSection("DirectLine");
+            var directlineConfig=Configuration.GetSection("DirectLine");
+            var jwt = Configuration.GetSection("Jwt").Get<InDirectLineAuthenticationOptions>();
             services.AddInDirectLine(directlineConfig);
-
-            services.AddAuthentication(opt =>{
-                    opt.DefaultAuthenticateScheme= JwtBearerDefaults.AuthenticationScheme;
-                    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(opt =>{
-                    opt.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-                    };
-                    opt.Events=new JwtBearerEvents{
-                        OnMessageReceived = ctx =>{
-                            if (ctx.HttpContext.WebSockets.IsWebSocketRequest && ctx.Request.Query.ContainsKey("t"))
-                            {
-                                ctx.Token = ctx.Request.Query["t"]; 
-                            }
-                            return Task.CompletedTask;
-                        },
-                    };
-                });
+            services.AddAuthentication()
+                .AddInDirectLine(jwt);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

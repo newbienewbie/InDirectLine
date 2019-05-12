@@ -1,12 +1,18 @@
 using System;
+using System.Text;
+using System.Threading.Tasks;
+using Itminus.InDirectLine.Core.Authentication;
 using Itminus.InDirectLine.Core.Authorization;
 using Itminus.InDirectLine.Core.Middlewares;
 using Itminus.InDirectLine.Core.Services;
 using Itminus.InDirectLine.Core.Services.IDirectLineConnections;
 using Itminus.InDirectLine.Core.Utils;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Itminus.InDirectLine.Core
 {
@@ -15,8 +21,9 @@ namespace Itminus.InDirectLine.Core
 
         public static IServiceCollection AddInDirectLine(this IServiceCollection services,IConfiguration directlineConfig)
         {
-            services.AddHttpClient();
             services.Configure<InDirectLineOptions>(directlineConfig);
+
+            services.AddHttpClient();
             services.AddSingleton<IConversationHistoryStore, InMemoryConversationHistoryStore>();
             services.AddSingleton<IDirectLineConnection,WebSocketDirectLineConnection>();
             services.AddSingleton<IDirectLineConnectionManager,DirectLineConnectionManager>();
@@ -42,5 +49,6 @@ namespace Itminus.InDirectLine.Core
             services.AddScoped<WebSocketConnectionMiddleware>();
             return services.AddScoped<DirectLineHelper>();
         }
+
     }
 }

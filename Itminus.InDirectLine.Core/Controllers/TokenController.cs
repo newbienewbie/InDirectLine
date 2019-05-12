@@ -55,8 +55,8 @@ namespace Itminus.InDirectLine.Core.Controllers{
         }
 
 
-        [Authorize]
         [HttpPost("v3/directline/[controller]/refresh")]
+        [Authorize(AuthenticationSchemes=InDirectLineDefaults.AuthenticationSchemeName)]
         public IActionResult Refresh()
         {
             var conversationId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == TokenBuilder.ClaimTypeConversationID).Value;

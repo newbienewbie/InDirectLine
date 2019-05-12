@@ -16,15 +16,19 @@ For more details, see [Direct Line API 3.0](https://docs.microsoft.com/en-us/azu
 * [x] Attachment support
     * [X] Basic support : allow uploading
     * [x] allow download
-* [ ] Persistene Layer & InMemory storage & clean up resources automatically
-* [ ] Security
+* [x] Security
     * [x] Token Generate & Refresh API
     * [x] Any user can only access his own conversation data
-    * [ ] Support secret & token at the same time
+* [ ] Persistene Layer & InMemory storage & clean up resources automatically
 
 ## How to Use
 
-Create a `directLine` by `WebChat.createDirectLine()` :
+Typically, `InDirectLine` will be used as an standlone server ([Itminus.InDirectLine.Web](https://github.com/newbienewbie/InDirectLine/tree/master/Itminus.InDirectLine.Web)). In this way, the `InDirectLine` & your `Bot` are two different processes. You could create your `Bot` in `C#`/`Node.js`/`Python`/`Java` languages as you like.
+
+Or if you're using `C#` and only want to test webchat within a single one website, you could add a reference to `Itminus.InDirectLine.Core` and make the `InDdirectLine` & your `Bot` share the same port. See [Itminus.InDirectLine.IntegrationBotSample](https://github.com/newbienewbie/InDirectLine/tree/master/Itminus.InDirectLine.IntegrationBotSample).
+
+
+In order to use `Directline` with `WebChat`, we need create a `directLine` instance by `WebChat.createDirectLine()` firstly:
 
 ```html
 <div id="webchat" role="main"></div>
@@ -48,7 +52,7 @@ Create a `directLine` by `WebChat.createDirectLine()` :
 ```
 Note the `domain` has no trailing slash `/`. 
 
-The webchat will use websocket by default. If you want a `REST` way, set the `webSocket=false`:
+The `WebChat` will use `WebSocket` by default. If you want a `REST` way, set the `webSocket=false`:
 
 ```javascript
     var directLine = window.WebChat.createDirectLine({

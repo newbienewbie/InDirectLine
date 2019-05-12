@@ -6,27 +6,29 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Itminus.InDirectLine.Core.Authentication;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Itminus.InDirectLine.Core.Services
 {
     public class TokenBuilder
     {
-        private readonly IConfiguration _config;
 
         public const string ClaimTypeConversationID = "Claim_Type:Itminus.InDirectLine.Core:ConversationID";
+        private InDirectLineAuthenticationOptions _authenticationOpts;
 
-        public TokenBuilder(IConfiguration config)
+        public TokenBuilder(IOptions<InDirectLineAuthenticationOptions> inDirectLineAuthenticatoinOpts)
         {
-            this._config = config;
+            this._authenticationOpts = inDirectLineAuthenticatoinOpts.Value??throw new ArgumentNullException(nameof(inDirectLineAuthenticatoinOpts));
         }
 
         public string BuildToken(string userName, IList<Claim> claims, int expireTime)
         {
             claims.Add(new Claim(ClaimTypes.Name,userName));
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._authenticationOpts.Key));
             var sign = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expiredAt = DateTime.UtcNow.AddMinutes(expireTime);
 
@@ -34,8 +36,8 @@ namespace Itminus.InDirectLine.Core.Services
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = expiredAt,
-                Issuer = _config["Jwt:Issuer"],
-                Audience = _config["Jwt:Audience"],
+                Issuer = this._authenticationOpts.Issuer,
+                Audience = this._authenticationOpts.Audience,
                 SigningCredentials = sign,
             };
 

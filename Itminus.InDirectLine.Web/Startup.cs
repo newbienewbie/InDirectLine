@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Itminus.InDirectLine.Core;
+using Itminus.InDirectLine.Core.Authentication;
 
 namespace Itminus.InDirectLine
 {
@@ -38,35 +39,13 @@ namespace Itminus.InDirectLine
             });
 
             var directlineConfig=Configuration.GetSection("DirectLine");
+            var jwt=Configuration.GetSection("Jwt").Get<InDirectLineAuthenticationOptions>();
             services.AddInDirectLine(directlineConfig);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddAuthentication(opt =>{
-                    opt.DefaultAuthenticateScheme= JwtBearerDefaults.AuthenticationScheme;
-                    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(opt =>{
-                    opt.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-                    };
-                    opt.Events=new JwtBearerEvents{
-                        OnMessageReceived = ctx =>{
-                            if (ctx.HttpContext.WebSockets.IsWebSocketRequest && ctx.Request.Query.ContainsKey("t"))
-                            {
-                                ctx.Token = ctx.Request.Query["t"]; 
-                            }
-                            return Task.CompletedTask;
-                        },
-                    };
-                });
+            services.AddAuthentication()
+                .AddInDirectLine(jwt);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

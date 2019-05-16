@@ -8,7 +8,11 @@ namespace Itminus.InDirectLine.WeChatBotSample.Services
 
     public class InMemoryWeiXinUserConversationStore : IWeixinUserConversationStore
     {
-        private Dictionary<string,ConversationInfo> dict;
+        private Dictionary<string,ConversationInfo> dict = new Dictionary<string, ConversationInfo>();
+
+        public InMemoryWeiXinUserConversationStore()
+        {
+        }
 
         public Task<ConversationInfo> GetConversationAsync(string userId)
         {

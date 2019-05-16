@@ -3,6 +3,7 @@ using Itminus.InDirectLine.Core.Services.IDirectLineConnections;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,13 @@ namespace Itminus.InDirectLine.Core.Middlewares
     public class WebSocketConnectionMiddleware : IMiddleware
     {
         private readonly IDirectLineConnectionManager _connectionManager;
+        private readonly IConversationHistoryStore _store;
         private readonly ILogger<WebSocketConnectionMiddleware> _logger;
 
-        public WebSocketConnectionMiddleware(IDirectLineConnectionManager connectionManager,ILogger<WebSocketConnectionMiddleware> logger)
+        public WebSocketConnectionMiddleware(IDirectLineConnectionManager connectionManager, IConversationHistoryStore store ,ILogger<WebSocketConnectionMiddleware> logger)
         {
             this._connectionManager = connectionManager;
+            this._store = store;
             this._logger = logger;
         }
 
@@ -60,16 +63,19 @@ namespace Itminus.InDirectLine.Core.Middlewares
             }
         }
 
-        private async Task OnConnect(string conversationId)
+        private async Task OnConnectAsync(string conversationId, int watermark=0)
         {
-            var s = "{\"activities\":\"[]\",\"watermark\":\"initial-watermark\"}";
+            var set = await this._store.GetActivitySetAsync(conversationId, watermark);
+            var s=  JsonConvert.SerializeObject(set);
             await this._connectionManager.SendAsync(conversationId,s);
         }
 
         private async Task ProcessWebSocketAsync(WebSocket webSocket,string conversationId)
         {
             if(webSocket.State == WebSocketState.Open){
-                await OnConnect(conversationId);
+
+                // send all the history messages 
+                await OnConnectAsync(conversationId,0);
 
                 var buffer = new byte[1024 * 4];
                 var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);

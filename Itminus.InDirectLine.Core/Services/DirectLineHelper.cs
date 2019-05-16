@@ -40,7 +40,11 @@ namespace Itminus.InDirectLine.Core.Services
 
         internal async Task<CreateNewConversationResult> CreateNewConversationWithId(string conversationId)
         {
-            var activity= CreateNewConversationUpdateActivity(conversationId);
+            var membersAdded = new List<ChannelAccount>{
+                new ChannelAccount{ Id = "UserABC"},
+            };
+            var MembersRemoved = new List<ChannelAccount>{};
+            var activity= CreateNewConversationUpdateActivity(conversationId,membersAdded,MembersRemoved);
             // persist this conversation to history store
             await this._history.CreateConversationIfNotExistsAsync(activity.Conversation.Id);
 
@@ -57,7 +61,7 @@ namespace Itminus.InDirectLine.Core.Services
             public HttpStatusCode StatusCode{get;set;}
         }
 
-        private IConversationUpdateActivity CreateNewConversationUpdateActivity(string conversationId)
+        private IConversationUpdateActivity CreateNewConversationUpdateActivity(string conversationId, IList<ChannelAccount> membersAdded, IList<ChannelAccount> MembersRemoved)
         {
             conversationId = string.IsNullOrEmpty(conversationId)? Guid.NewGuid().ToString(): conversationId;
             var serviceUrl  = this._opt.ServiceUrl;
@@ -68,16 +72,22 @@ namespace Itminus.InDirectLine.Core.Services
                 ServiceUrl = serviceUrl,
                 Conversation = new ConversationAccount{ Id = conversationId, },
                 Id= Guid.NewGuid().ToString(),
-                MembersAdded= new List<ChannelAccount>(),
-                MembersRemoved= new List<ChannelAccount>(),
+                MembersAdded= membersAdded,
+                MembersRemoved= MembersRemoved,
                 From = new ChannelAccount { 
                     Id = "offline-directline", 
                     Name = "Offline Directline Server"
                 },
+                Recipient = BotChannelAccount,
             };
 
             return activity.AsConversationUpdateActivity();
         }
+
+        internal ChannelAccount BotChannelAccount {get;set;} = new ChannelAccount{
+            Id = "InDirectLine.Bot",
+            Name = "InDirectLine Bot",
+        };
 
         public IMessageActivity CreateAttachmentActivity(string serviceUrl, string conversationId,string userId ,IList<Attachment> attachments )
         {

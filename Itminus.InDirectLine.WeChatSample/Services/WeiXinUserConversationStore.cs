@@ -1,7 +1,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Bot.Connector.DirectLine;
+using Itminus.InDirectLine.Core.Models;
 
 namespace Itminus.InDirectLine.WeChatBotSample.Services
 {
@@ -26,10 +26,10 @@ namespace Itminus.InDirectLine.WeChatBotSample.Services
             }
         }
 
-        public Task<bool> StoreAsync(string userId, Conversation conversation , string watermark = "")
+        public Task<bool> StoreAsync(string userId, DirectLineConversation conversation , string watermark = "")
         {
             var r= this.dict.TryAdd(userId,new ConversationInfo{
-                Conversation = conversation,
+                DirectLineConversation = conversation,
                 Watermark = watermark,
             });
             return Task.FromResult(r);
@@ -40,12 +40,12 @@ namespace Itminus.InDirectLine.WeChatBotSample.Services
     {
         Task<ConversationInfo> GetConversationAsync(string userId);
 
-        Task<bool> StoreAsync(string userId, Conversation conversation , string watermark="");
+        Task<bool> StoreAsync(string userId, DirectLineConversation conversation , string watermark="");
     }
 
     public class ConversationInfo
     {
-        public Conversation Conversation {get;set;}
+        public DirectLineConversation DirectLineConversation{get;set;}
         public string Watermark {get;set;} = "";
     }
 

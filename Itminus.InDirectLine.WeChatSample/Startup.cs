@@ -20,7 +20,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Itminus.InDirectLine.Core.Authentication;
 using Itminus.InDirectLine.WeChatBotSample.Services;
-using Microsoft.Bot.Connector.DirectLine;
 using Itminus.InDirectLine.Core.Services;
 using Microsoft.Extensions.Options;
 
@@ -55,12 +54,7 @@ namespace Itminus.InDirectLine.WeChatBotSample
             services.AddAuthentication()
                 .AddInDirectLine(jwt);
             
-            services.AddScoped<DirectLineClient>(sp =>{
-                var client = new DirectLineClient();
-                var opt = sp.GetRequiredService<IOptions<InDirectLineOptions>>().Value;
-                client.BaseUri = new System.Uri(opt.ServiceUrl);
-                return client;
-            });
+            services.AddHttpClient<InDirectLineClient>();
             services.AddSingleton<IWeixinUserConversationStore,InMemoryWeiXinUserConversationStore>();
             services.Configure<WeiXinOptions>(Configuration.GetSection("Weixin"));
             services.AddSingleton<WeixinHelper>();

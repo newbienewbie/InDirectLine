@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/Itminus.InDirectLine.IntegrationBotSample.csproj"
+                "${workspaceFolder}/Itminus.InDirectLine.WeChatBotSample.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -17,7 +17,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/Itminus.InDirectLine.IntegrationBotSample.csproj"
+                "${workspaceFolder}/Itminus.InDirectLine.WeChatBotSample.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -28,7 +28,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/Itminus.InDirectLine.IntegrationBotSample.csproj"
+                "${workspaceFolder}/Itminus.InDirectLine.WeChatBotSample.csproj"
             ],
             "problemMatcher": "$tsc"
         }

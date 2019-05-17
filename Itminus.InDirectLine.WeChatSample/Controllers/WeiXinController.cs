@@ -1,12 +1,18 @@
 
 using System;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Itminus.InDirectLine.Core.Models;
+using Itminus.InDirectLine.Core.Services;
 using Itminus.InDirectLine.WeChatBotSample.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Bot.Connector.DirectLine;
+using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Senparc.NeuChar;
 using Senparc.NeuChar.Entities;
 using Senparc.NeuChar.Helpers;
@@ -24,13 +30,16 @@ namespace Webbot.Wechat.Controllers
         private readonly WeixinHelper _helper;
         private readonly ILogger<WeiXinController> _logger;
         private readonly IWeixinUserConversationStore _ucstore;
-        private readonly DirectLineClient _directLineClient;
+        private readonly InDirectLineClient _directLineClient;
+        private readonly InDirectLineOptions _opts;
 
-        public WeiXinController(WeixinHelper helper, ILogger<WeiXinController> logger, IWeixinUserConversationStore ucstore, DirectLineClient directLineClient)
+        public WeiXinController(WeixinHelper helper, ILogger<WeiXinController> logger, IWeixinUserConversationStore ucstore, InDirectLineClient directLineClient,IOptions<InDirectLineOptions> opts)
         {
             this._helper = helper;
             this._logger = logger;
             this._ucstore = ucstore;
+            this._opts = opts.Value;
+
             this._directLineClient = directLineClient;
         }
 
@@ -61,6 +70,7 @@ namespace Webbot.Wechat.Controllers
             this._logger.LogInformation("Msg from WeiXin Server received");
 
             XDocument doc = XDocument.Load(Request.Body);
+            this._logger.LogInformation("Msg from WeiXin Server received is: \r\n"+ doc.ToString());
             var requestMessage = RequestMessageFactory.GetRequestEntity(doc);
 
             var userId = requestMessage.FromUserName.Trim();
@@ -68,8 +78,10 @@ namespace Webbot.Wechat.Controllers
 
             if(conversationInfo== null)
             {
-                var conversation = await this._directLineClient.Conversations.StartConversationAsync().ConfigureAwait(false);
-                await this._ucstore.StoreAsync(userId, conversation).ConfigureAwait(false);
+                var initialToken = await this._directLineClient.GenerateTokenAsync().ConfigureAwait(false);
+                var directLineConversation = await this._directLineClient.StartConversationAsync(initialToken).ConfigureAwait(false);
+                await this._ucstore.StoreAsync(userId, directLineConversation, "").ConfigureAwait(false);
+                conversationInfo = await this._ucstore.GetConversationAsync(userId);
             }
 
             string respDoc = "";
@@ -85,17 +97,19 @@ namespace Webbot.Wechat.Controllers
                         Text = strongRequestMessage.Content,
                         Type = ActivityTypes.Message,
                     };
-                    var conversation = conversationInfo.Conversation;
-                    await this._directLineClient.Conversations.PostActivityAsync(conversation.ConversationId, activity)
+                    var conversation = conversationInfo.DirectLineConversation;
+                    await this._directLineClient.SendActivityAsync(conversation.ConversationId, activity,conversation.Token)
                         .ConfigureAwait(false);
-                    var respActivities= await this._directLineClient.Conversations.GetActivitiesAsync(conversation.ConversationId, conversationInfo.Watermark)
+                    var respActivities= await this._directLineClient.RetrieveActivitySetAsync(conversation.ConversationId, conversationInfo.Watermark, conversation.Token)
                         .ConfigureAwait(false);
 
-                    conversationInfo.Watermark = respActivities.Watermark;
+                    conversationInfo.Watermark =respActivities.Watermark.ToString();
 
                     var reply= String.Join(
                         '|',
-                        respActivities.Activities.Where(a => true)   // todo: where id == botId
+                        respActivities.Activities
+                            .Where(a => true)   // todo: where id == botId
+                            .Select(a => a.Text)
                     );
 
                     var strongRespMessage=ResponseMessageBase.CreateFromRequestMessage<ResponseMessageText>(strongRequestMessage); 

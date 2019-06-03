@@ -59,8 +59,12 @@ namespace Itminus.InDirectLine.Core.Controllers{
         [Authorize(AuthenticationSchemes=InDirectLineDefaults.AuthenticationSchemeName)]
         public IActionResult Refresh()
         {
-            var conversationId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == TokenBuilder.ClaimTypeConversationID).Value;
+            var conversationId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == TokenBuilder.ClaimTypeConversationID)?.Value;
+            if(string.IsNullOrEmpty(conversationId)){
+                return BadRequest("there's no valid conversationID");
+            }
             var claims = new List<Claim>();
+            claims.Add(new Claim(TokenBuilder.ClaimTypeConversationID, conversationId));
             var expiresIn = this._inDirectlineOption.TokenExpiresIn;
             var token =  this._tokenBuilder.BuildToken(conversationId,claims, expiresIn);
             return new OkObjectResult(new DirectLineConversation{

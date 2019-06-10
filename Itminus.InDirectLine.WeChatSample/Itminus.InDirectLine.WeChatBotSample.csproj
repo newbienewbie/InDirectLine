@@ -7,7 +7,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.3.2" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="16.7.4.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Itminus.InDirectLine.Core\Itminus.InDirectLine.Core.csproj" />
+    <ProjectReference Include="..\Itminus.InDirectLine.WeChat\Itminus.InDirectLine.WeChat.csproj" />
   </ItemGroup>
 
 </Project>

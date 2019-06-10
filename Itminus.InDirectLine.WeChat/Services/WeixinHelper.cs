@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 
-namespace Itminus.InDirectLine.WeChatBotSample.Services
+namespace Itminus.InDirectLine.WeChat.Services
 {
     public class WeixinHelper
     {

@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Itminus.InDirectLine.Core.Models;
 using Itminus.InDirectLine.Core.Services;
-using Itminus.InDirectLine.WeChatBotSample.Services;
+using Itminus.InDirectLine.WeChat.Models;
+using Itminus.InDirectLine.WeChat.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,7 @@ using Senparc.NeuChar.Helpers;
 using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.Entities;
 
-namespace Webbot.Wechat.Controllers
+namespace Itminus.InDirectLine.WeChat
 {
 
 
@@ -98,7 +99,7 @@ namespace Webbot.Wechat.Controllers
                     conversationInfo.Watermark =respActivities.Watermark.ToString();
 
                     var reply= String.Join(
-                        '|',
+                        "\r\n",
                         respActivities.Activities
                             .Where(a => true)   // todo: where id == botId
                             .Select(a => a.Text)

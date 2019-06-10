@@ -1,4 +1,4 @@
-namespace Itminus.InDirectLine.WeChatBotSample.Services
+namespace Itminus.InDirectLine.WeChat.Services
 {
     public class WeiXinOptions{
         public string AppId {get;set;} 

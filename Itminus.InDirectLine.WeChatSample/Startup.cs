@@ -19,9 +19,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Threading.Tasks;
 using Itminus.InDirectLine.Core.Authentication;
-using Itminus.InDirectLine.WeChatBotSample.Services;
 using Itminus.InDirectLine.Core.Services;
 using Microsoft.Extensions.Options;
+using Itminus.InDirectLine.WeChat.Services;
 
 namespace Itminus.InDirectLine.WeChatBotSample
 {

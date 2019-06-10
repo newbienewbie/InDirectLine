@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Bot.Builder.Dialogs" Version="4.4.4" />
     <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.3.2" />
   </ItemGroup>
 
@@ -16,7 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Itminus.InDirectLine.WeChat\Itminus.InDirectLine.WeChat.csproj" />
+    <ProjectReference Include="..\..\Itminus.InDirectLine.Core\Itminus.InDirectLine.Core.csproj" />
+    <ProjectReference Include="..\..\Itminus.InDirectLine.WeChat\Itminus.InDirectLine.WeChat.csproj" />
   </ItemGroup>
 
 </Project>

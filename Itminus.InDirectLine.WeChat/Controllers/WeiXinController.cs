@@ -71,7 +71,7 @@ namespace Itminus.InDirectLine.WeChat
             this._logger.LogInformation("Msg from WeiXin Server received");
 
             XDocument doc = XDocument.Load(Request.Body);
-            this._logger.LogInformation("Msg from WeiXin Server received is: \r\n"+ doc.ToString());
+            this._logger.LogInformation("Msg from WeiXin Server received is: \n"+ doc.ToString());
             var requestMessage = RequestMessageFactory.GetRequestEntity(doc);
 
             var userId = requestMessage.FromUserName.Trim();
@@ -99,10 +99,10 @@ namespace Itminus.InDirectLine.WeChat
                     conversationInfo.Watermark =respActivities.Watermark.ToString();
 
                     var reply= String.Join(
-                        "\r\n",
+                        "\n\n",
                         respActivities.Activities
                             .Where(a => true)   // todo: where id == botId
-                            .Select(a => a.Text)
+                            .Select(a => MessageToText(a) )
                     );
 
                     var strongRespMessage=ResponseMessageBase.CreateFromRequestMessage<ResponseMessageText>(strongRequestMessage); 
@@ -158,6 +158,20 @@ namespace Itminus.InDirectLine.WeChat
             return  await this._ucstore.GetConversationAsync(userId);
         }
 
+
+        private string MessageToText(Activity activity)
+        {
+            if(activity.Text !=null){
+                return activity.Text;
+            }
+            if(activity.SuggestedActions!=null)
+            {
+                var actions = activity.SuggestedActions.Actions.Select(a => $"{a.Title}");
+                return String.Join("\n",actions);
+            }
+            // otherwise
+            return activity.Text;
+        }
 
     }
 

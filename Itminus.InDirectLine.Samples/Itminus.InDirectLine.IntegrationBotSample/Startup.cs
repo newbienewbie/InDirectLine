@@ -12,18 +12,17 @@ using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using Itminus.InDirectLine.WeChatBotSample.Bots;
+using Itminus.InDirectLine.IntegrationBotSample.Bots;
 using Itminus.InDirectLine.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Threading.Tasks;
 using Itminus.InDirectLine.Core.Authentication;
-using Itminus.InDirectLine.Core.Services;
-using Microsoft.Extensions.Options;
+using Itminus.InDirectLine.IntegrationBotSample.Dialogs;
 using Itminus.InDirectLine.WeChat.Services;
 
-namespace Itminus.InDirectLine.WeChatBotSample
+namespace Itminus.InDirectLine.IntegrationBotSample
 {
     public class Startup
     {
@@ -53,8 +52,15 @@ namespace Itminus.InDirectLine.WeChatBotSample
             services.AddInDirectLine(directlineConfig);
             services.AddAuthentication()
                 .AddInDirectLine(jwt);
-            
-            services.AddHttpClient<InDirectLineClient>();
+            services.AddSingleton<IStorage,MemoryStorage>();
+            services.AddSingleton<ConversationState>();
+            services.AddSingleton<UserState>();
+            services.AddSingleton<IStatePropertyAccessor<UserLocation>>(sp =>{
+                var userState = sp.GetRequiredService<UserState>();
+                var accessor = userState.CreateProperty<UserLocation>(nameof(UserLocation));
+                return accessor;
+            });
+            services.AddSingleton<MainDialog>();
             services.AddSingleton<IWeixinUserConversationStore,InMemoryWeiXinUserConversationStore>();
             services.Configure<WeiXinOptions>(Configuration.GetSection("Weixin"));
             services.AddSingleton<WeixinHelper>();

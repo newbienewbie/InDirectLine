@@ -74,15 +74,7 @@ namespace Webbot.Wechat.Controllers
             var requestMessage = RequestMessageFactory.GetRequestEntity(doc);
 
             var userId = requestMessage.FromUserName.Trim();
-            var conversationInfo= await this._ucstore.GetConversationAsync(userId);
-
-            if(conversationInfo== null)
-            {
-                var initialToken = await this._directLineClient.GenerateTokenAsync().ConfigureAwait(false);
-                var directLineConversation = await this._directLineClient.StartConversationAsync(initialToken).ConfigureAwait(false);
-                await this._ucstore.StoreAsync(userId, directLineConversation, "").ConfigureAwait(false);
-                conversationInfo = await this._ucstore.GetConversationAsync(userId);
-            }
+            var conversationInfo= await this.RetrieveConversationInfoAsync(userId);
 
             string respDoc = "";
 
@@ -131,7 +123,39 @@ namespace Webbot.Wechat.Controllers
         }
 
 
+        private async Task<ConversationInfo> RetrieveConversationInfoAsync(string userId){
 
+            var conversationInfo= await this._ucstore.GetConversationAsync(userId).ConfigureAwait(false);
+
+            // brand new
+            if(conversationInfo== null)
+            {
+                conversationInfo = await StartNewConversationAsync(userId).ConfigureAwait(false);
+            }
+            else if(!conversationInfo.Active)
+            {
+                conversationInfo = await StartNewConversationAsync(userId).ConfigureAwait(false);
+            }
+            else if(conversationInfo.ShouldRefresh)
+            {
+                var refreshed = await this._directLineClient.RefreshTokenAsync(conversationInfo.DirectLineConversation.Token)
+                    .ConfigureAwait(false);
+                await this._ucstore.StoreAsync(userId,refreshed,"");
+                conversationInfo = await this._ucstore.GetConversationAsync(userId);
+            }
+            return conversationInfo;
+        }
+
+        private async Task<ConversationInfo> StartNewConversationAsync(string userId)
+        {
+            var initConversation= await this._directLineClient.GenerateTokenAsync()
+                .ConfigureAwait(false);
+            var directLineConversation = await this._directLineClient.StartConversationAsync(initConversation.Token)
+                .ConfigureAwait(false);
+            await this._ucstore.StoreAsync(userId, directLineConversation, "")
+                .ConfigureAwait(false);
+            return  await this._ucstore.GetConversationAsync(userId);
+        }
 
 
     }

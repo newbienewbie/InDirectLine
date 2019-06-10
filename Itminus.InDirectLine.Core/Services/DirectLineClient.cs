@@ -22,7 +22,7 @@ namespace Itminus.InDirectLine.Core.Services
             this._httpClient.BaseAddress = new Uri(opts.Value.ServiceUrl);
         }
 
-        public async Task<string> GenerateTokenAsync()
+        public async Task<DirectLineConversation> GenerateTokenAsync()
         {
             var endpoint = "/v3/directline/tokens/generate";
             var req = new HttpRequestMessage(HttpMethod.Post,endpoint);
@@ -30,10 +30,10 @@ namespace Itminus.InDirectLine.Core.Services
             var resp = await this._httpClient.SendAsync(req);
             var json= await resp.Content.ReadAsStringAsync();
             var x = JsonConvert.DeserializeObject<DirectLineConversation>(json);
-            return x.Token;
+            return x;
         }
 
-        public async Task<string> RefreshTokenAsync(string token)
+        public async Task<DirectLineConversation> RefreshTokenAsync(string token)
         {
             var endpoint =  "/v3/directline/tokens/refresh";
             var req = new HttpRequestMessage(HttpMethod.Post,endpoint);
@@ -42,7 +42,7 @@ namespace Itminus.InDirectLine.Core.Services
             var resp = await this._httpClient.SendAsync(req);
             var json= await resp.Content.ReadAsStringAsync();
             var x = JsonConvert.DeserializeObject<DirectLineConversation>(json);
-            return x.Token;
+            return x;
         }
 
 

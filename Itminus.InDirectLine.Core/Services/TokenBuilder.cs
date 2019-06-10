@@ -30,7 +30,7 @@ namespace Itminus.InDirectLine.Core.Services
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._authenticationOpts.Key));
             var sign = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expiredAt = DateTime.UtcNow.AddMinutes(expireTime);
+            var expiredAt = DateTime.UtcNow.AddSeconds(expireTime);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

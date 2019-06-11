@@ -20,13 +20,23 @@ For more details, see [Direct Line API 3.0](https://docs.microsoft.com/en-us/azu
     * [x] Token Generate & Refresh API
     * [x] Any user can only access his own conversation data
 * [ ] Persistene Layer & InMemory storage & clean up resources automatically
+* [X] Wechat MP support
 
 ## How to Use
 
+
+### Mode
+
+#### Standlone Server (cross-language)
+
 Typically, `InDirectLine` will be used as an standlone server ([Itminus.InDirectLine.Web](https://github.com/newbienewbie/InDirectLine/tree/master/Itminus.InDirectLine.Web)). In this way, the `InDirectLine` & your `Bot` are two different processes. You could create your `Bot` in `C#`/`Node.js`/`Python`/`Java` languages as you like.
 
-Or if you're using `C#` and only want to test webchat within a single one website, you could add a reference to `Itminus.InDirectLine.Core` and make the `InDdirectLine` & your `Bot` share the same port. See [Itminus.InDirectLine.IntegrationBotSample](https://github.com/newbienewbie/InDirectLine/tree/master/Itminus.InDirectLine.IntegrationBotSample).
+#### Integration with the Web Server (ASP.NET Core required)
 
+Or if you're using `C#` and only want to test webchat within a single one website, you could add a reference to `Itminus.InDirectLine.Core` and make the `InDdirectLine` & your `Bot` share the same port. See [Itminus.InDirectLine.IntegrationBotSample](https://github.com/newbienewbie/InDirectLine/tree/master/Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample).
+
+
+### WebChat
 
 In order to use `Directline` with `WebChat`, we need create a `directLine` instance by `WebChat.createDirectLine()` firstly:
 
@@ -61,6 +71,11 @@ The `WebChat` will use `WebSocket` by default. If you want a `REST` way, set the
         webSocket:false, 
     });
 ```
+
+### WeChat
+
+See [Itminus.InDirectLine.IntegrationBotSample](https://github.com/newbienewbie/InDirectLine/tree/master/Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample).
+
 
 ### `InDirectLine` Configuration
 

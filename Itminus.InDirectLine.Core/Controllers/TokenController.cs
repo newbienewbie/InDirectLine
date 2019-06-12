@@ -39,14 +39,15 @@ namespace Itminus.InDirectLine.Core.Controllers{
 
 
         [HttpPost("v3/directline/[controller]/generate")]
-        public IActionResult Generate()
+        public IActionResult Generate([FromBody]TokenCreationPayload payload)
         {
             // according to https://docs.microsoft.com/en-us/azure/bot-service/rest-api/bot-framework-rest-direct-line-3-0-authentication?view=azure-bot-service-4.0#generate-token-versus-start-conversation
             //     we don't start a conversation , we just issue a new token that is valid for specific conversation
+            var userId = payload.UserId;
             var conversationId = Guid.NewGuid().ToString();
             var claims = new List<Claim>();
             var expiresIn = this._inDirectlineOption.TokenExpiresIn;
-            var token =  this._tokenBuilder.BuildToken(conversationId,claims, expiresIn);
+            var token =  this._tokenBuilder.BuildToken( userId, claims, expiresIn);
             return new OkObjectResult(new DirectLineConversation{
                 ConversationId = conversationId,
                 Token = token,
@@ -63,10 +64,15 @@ namespace Itminus.InDirectLine.Core.Controllers{
             if(string.IsNullOrEmpty(conversationId)){
                 return BadRequest("there's no valid conversationID");
             }
+            var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            if(string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("there's no valid userId");
+            }
             var claims = new List<Claim>();
             claims.Add(new Claim(TokenBuilder.ClaimTypeConversationID, conversationId));
             var expiresIn = this._inDirectlineOption.TokenExpiresIn;
-            var token =  this._tokenBuilder.BuildToken(conversationId,claims, expiresIn);
+            var token =  this._tokenBuilder.BuildToken(userId, claims, expiresIn);
             return new OkObjectResult(new DirectLineConversation{
                 ConversationId = conversationId,
                 Token = token,

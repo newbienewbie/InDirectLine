@@ -56,6 +56,11 @@ namespace Itminus.InDirectLine.Core.Controllers{
         [Authorize(AuthenticationSchemes=InDirectLineDefaults.AuthenticationSchemeName)]
         public async Task<IActionResult> Conversations()
         {
+            var userId= HttpContext.User?.Claims.FirstOrDefault(c => c.Type== ClaimTypes.Name)?.Value;
+            if(string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("userId cannot be null!");
+            }
             var conversationId = HttpContext.User?.Claims.FirstOrDefault(c => c.Type== TokenBuilder.ClaimTypeConversationID)?.Value;
             var result= await this._helper.CreateNewConversationWithId(conversationId);
             // make sure the conversationId is created if null or empty
@@ -65,10 +70,10 @@ namespace Itminus.InDirectLine.Core.Controllers{
             claims.Add(new Claim(TokenBuilder.ClaimTypeConversationID, conversationId));
 
             var expiresIn = this._inDirectlineOption.TokenExpiresIn ;
-            var token = this._tokenBuilder.BuildToken(conversationId,claims,expiresIn);
+            var token = this._tokenBuilder.BuildToken(userId,claims,expiresIn);
 
             var mustBeConnectedIn = this._inDirectlineOption.StreamUrlMustBeConnectedIn;
-            var streamUrlToken = this._tokenBuilder.BuildToken(conversationId,claims,mustBeConnectedIn);
+            var streamUrlToken = this._tokenBuilder.BuildToken(userId,claims,mustBeConnectedIn);
 
             var origin = UtilsEx.GetWebSocketOrigin(this._inDirectlineOption.ServiceUrl);
                 

@@ -17,20 +17,28 @@
     <div id="webchat" role="main"></div>
     <script src="/js/webchat.js"></script>
     <script>
-        fetch('/v3/directline/tokens/generate', { method: 'POST' })
-            .then(res => res.json())
-            .then(res => {
-                var directLine = window.WebChat.createDirectLine({
-                    domain: "/v3/directline",
-                    token: res.token,
-                });
-                window.WebChat.renderWebChat({
-                    directLine: directLine,
-                    userID: 'YOUR_USER_ID',
-                    username: 'Web Chat User',
-                    locale: 'en-US',
-                }, document.getElementById('webchat'));
+        var userId ="User-"+ parseInt(Math.random()* 1000000);
+        var userName = userId;
+        fetch('/v3/directline/tokens/generate', { 
+            method: 'POST',
+            headers:{
+                "Content-Type":"application/json",
+            },
+            body: JSON.stringify({ userId: userId, }),
+        })
+        .then(res => res.json())
+        .then(res => {
+            var directLine = window.WebChat.createDirectLine({
+                domain: "/v3/directline",
+                token: res.token,
             });
+            window.WebChat.renderWebChat({
+                directLine: directLine,
+                userID: userId,
+                username: userName,
+                locale: 'en-US',
+            }, document.getElementById('webchat'));
+        });
     </script>
 </body>
 

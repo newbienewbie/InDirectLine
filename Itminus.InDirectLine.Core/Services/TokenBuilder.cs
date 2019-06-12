@@ -26,6 +26,16 @@ namespace Itminus.InDirectLine.Core.Services
 
         public string BuildToken(string userName, IList<Claim> claims, int expireTime)
         {
+            if(string.IsNullOrEmpty(userName))
+            {
+                throw new ArgumentNullException(nameof(userName));
+            }
+
+            if(claims==null)
+            {
+                throw new ArgumentNullException(nameof(claims));
+            }
+
             claims.Add(new Claim(ClaimTypes.Name,userName));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._authenticationOpts.Key));

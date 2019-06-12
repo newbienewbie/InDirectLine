@@ -68,7 +68,7 @@ namespace Itminus.InDirectLine.Core.Services
 
             var activity = new Activity{
                 Type =  ActivityTypes.ConversationUpdate,
-                ChannelId = "emulator",
+                ChannelId = InDirectLineDefaults.ChannelId,
                 ServiceUrl = serviceUrl,
                 Conversation = new ConversationAccount{ Id = conversationId, },
                 Id= Guid.NewGuid().ToString(),
@@ -93,7 +93,7 @@ namespace Itminus.InDirectLine.Core.Services
         {
             var activity = new Activity{
                 Type = ActivityTypes.Message,
-                ChannelId = "emulator",
+                ChannelId = InDirectLineDefaults.ChannelId,
                 ServiceUrl = serviceUrl,
                 Conversation = new ConversationAccount{ Id = conversationId, },
                 From = new ChannelAccount{

@@ -129,7 +129,7 @@ namespace Itminus.InDirectLine.Core.Controllers{
 
             // create a Id for activity
             activity.Id = Guid.NewGuid().ToString();
-            activity.ChannelId = "emulator";
+            activity.ChannelId = InDirectLineDefaults.ChannelId;
             activity.ServiceUrl = this._inDirectlineOption.ServiceUrl;
             activity.Conversation = new ConversationAccount{
                 Id = conversationId,

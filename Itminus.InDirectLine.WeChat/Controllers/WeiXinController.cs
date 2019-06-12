@@ -101,7 +101,7 @@ namespace Itminus.InDirectLine.WeChat
                     var reply= String.Join(
                         "\n\n",
                         respActivities.Activities
-                            .Where(a => true)   // todo: where id == botId
+                            .Where(a => a.Recipient.Id == userId)   // todo: where id == botId
                             .Select(a => MessageToText(a) )
                     );
 

@@ -9,9 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Itminus.InDirectLine.Web/bin/Debug/netcoreapp2.2/Itminus.InDirectLine.Web.dll",
-            "args": ["--urls=http://localhost:3000"],
-            "cwd": "${workspaceFolder}/Itminus.InDirectLine.Web",
+            "program": "${workspaceFolder}/Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample/bin/Debug/netcoreapp2.2/Itminus.InDirectLine.IntegrationBotSample.dll",
+            "args": ["--urls=http://localhost:5000"],
+            "cwd": "${workspaceFolder}/Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample",
             "stopAtEntry": false,
             "launchBrowser": {
                 "enabled": true

@@ -44,17 +44,25 @@ In order to use `Directline` with `WebChat`, we need create a `directLine` insta
 <div id="webchat" role="main"></div>
 <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat-minimal.js"></script>
 <script>
-    fetch('http://localhost:3000/v3/directline/tokens/generate', { method: 'POST' })
+        var userId ="User-"+ parseInt(Math.random()* 1000000);
+        var userName = userId;
+        fetch('/v3/directline/tokens/generate', { 
+            method: 'POST',
+            headers:{
+                "Content-Type":"application/json",
+            },
+            body: JSON.stringify({ userId: userId, password: ""}),
+        })
         .then(res => res.json())
         .then(res => {
             var directLine = window.WebChat.createDirectLine({
-                domain: "http://localhost:3000/v3/directline",
+                domain: "/v3/directline",
                 token: res.token,
             });
             window.WebChat.renderWebChat({
                 directLine: directLine,
-                userID: 'YOUR_USER_ID',
-                username: 'Web Chat User',
+                userID: userId,
+                username: userName,
                 locale: 'en-US',
             }, document.getElementById('webchat'));
         });

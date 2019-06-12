@@ -22,11 +22,19 @@ namespace Itminus.InDirectLine.Core.Services
             this._httpClient.BaseAddress = new Uri(opts.Value.ServiceUrl);
         }
 
-        public async Task<DirectLineConversation> GenerateTokenAsync()
+        public async Task<DirectLineConversation> GenerateTokenAsync(TokenCreationPayload payload)
         {
+            if(payload ==null)
+            {
+                throw new ArgumentNullException(nameof(payload));
+            }
             var endpoint = "/v3/directline/tokens/generate";
             var req = new HttpRequestMessage(HttpMethod.Post,endpoint);
-            req.Content = new StringContent("");
+            req.Content = new StringContent(
+                JsonConvert.SerializeObject(payload), 
+                Encoding.UTF8, 
+                "application/json"
+            );
             var resp = await this._httpClient.SendAsync(req);
             var json= await resp.Content.ReadAsStringAsync();
             var x = JsonConvert.DeserializeObject<DirectLineConversation>(json);

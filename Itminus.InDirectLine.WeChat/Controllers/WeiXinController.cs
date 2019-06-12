@@ -149,7 +149,15 @@ namespace Itminus.InDirectLine.WeChat
 
         private async Task<ConversationInfo> StartNewConversationAsync(string userId)
         {
-            var initConversation= await this._directLineClient.GenerateTokenAsync()
+            if(string.IsNullOrEmpty(userId))
+            {
+                throw new ArgumentNullException(nameof(userId));
+            }
+            var payload = new TokenCreationPayload{
+                UserId = userId,
+                Password = "to-dos",
+            };
+            var initConversation= await this._directLineClient.GenerateTokenAsync(payload)
                 .ConfigureAwait(false);
             var directLineConversation = await this._directLineClient.StartConversationAsync(initConversation.Token)
                 .ConfigureAwait(false);

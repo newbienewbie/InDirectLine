@@ -38,10 +38,16 @@ namespace Itminus.InDirectLine.Core.Services
         }
 
 
-        internal async Task<CreateNewConversationResult> CreateNewConversationWithId(string conversationId)
+        internal async Task<CreateNewConversationResult> CreateNewConversationWithId(string userId, string conversationId)
         {
+            if(string.IsNullOrEmpty(userId)){
+                throw new ArgumentNullException(nameof(userId)); 
+            }
+            if(string.IsNullOrEmpty(conversationId)) {
+                throw new ArgumentNullException(nameof(conversationId));
+            }
             var membersAdded = new List<ChannelAccount>{
-                new ChannelAccount{ Id = "UserABC"},
+                new ChannelAccount{ Id = userId},
             };
             var MembersRemoved = new List<ChannelAccount>{};
             var activity= CreateNewConversationUpdateActivity(conversationId,membersAdded,MembersRemoved);

@@ -62,7 +62,7 @@ namespace Itminus.InDirectLine.Core.Controllers{
                 return BadRequest("userId cannot be null!");
             }
             var conversationId = HttpContext.User?.Claims.FirstOrDefault(c => c.Type== TokenBuilder.ClaimTypeConversationID)?.Value;
-            var result= await this._helper.CreateNewConversationWithId(conversationId);
+            var result= await this._helper.CreateNewConversationWithId(userId, conversationId);
             // make sure the conversationId is created if null or empty
             conversationId = result.Activity.Conversation.Id;
 

@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Itminus.InDirectLine.IntegrationBotSample</title>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-inner-container">
+            <div class="header-icon" style="display: inline-block"></div>
+            <div class="header-text" style="display: inline-block"><h1>Itminus.InDirectLine.IntegrationBotSample</h1></div>
+        </div>
+    </header>
+    <div id="webchat" role="main"></div>
+    <script src="/js/webchat.js"></script>
+    <script>
+        var userId ="User-"+ parseInt(Math.random()* 1000000);
+        var userName = userId;
+        var directlineDomain ="http://localhost:3000/v3/directline"; 
+        fetch(directlineDomain+'/tokens/generate', { 
+            method: 'POST',
+            headers:{
+                "Content-Type":"application/json",
+            },
+            body: JSON.stringify({ userId: userId, }),
+        })
+        .then(res => res.json())
+        .then(res => {
+            var directLine = window.WebChat.createDirectLine({
+                domain: directlineDomain,
+                token: res.token,
+            });
+            window.WebChat.renderWebChat({
+                directLine: directLine,
+                userID: userId,
+                username: userName,
+                locale: 'en-US',
+            }, document.getElementById('webchat'));
+        });
+    </script>
+</body>
+
+</html>

@@ -14,7 +14,7 @@ namespace Itminus.InDirectLine.Core.Services
 {
     public class DirectLineHelper
     {
-        private readonly InDirectLineOptions _opt;
+        private readonly InDirectLineSettings _settings;
         private readonly HttpClient _httpClient;
         private readonly IConversationHistoryStore _history;
 
@@ -27,12 +27,12 @@ namespace Itminus.InDirectLine.Core.Services
         /// <returns></returns>
         public string GetBotMessageEndpointUrl()
         {
-            return this._opt.BotEndpoint;
+            return this._settings.BotEndpoint;
         }
 
-        public DirectLineHelper(IOptions<InDirectLineOptions> opt , IHttpClientFactory clientFactory, IConversationHistoryStore history)
+        public DirectLineHelper(IOptions<InDirectLineSettings> settings , IHttpClientFactory clientFactory, IConversationHistoryStore history)
         {
-            this._opt = opt?.Value?? throw new Exception($"the {nameof(opt)} must not be null!");
+            this._settings = settings?.Value?? throw new Exception($"the {nameof(settings)} must not be null!");
             this._httpClient = clientFactory.CreateClient();
             this._history = history;
         }
@@ -70,7 +70,7 @@ namespace Itminus.InDirectLine.Core.Services
         private IConversationUpdateActivity CreateNewConversationUpdateActivity(string conversationId, IList<ChannelAccount> membersAdded, IList<ChannelAccount> MembersRemoved)
         {
             conversationId = string.IsNullOrEmpty(conversationId)? Guid.NewGuid().ToString(): conversationId;
-            var serviceUrl  = this._opt.ServiceUrl;
+            var serviceUrl  = this._settings.ServiceUrl;
 
             var activity = new Activity{
                 Type =  ActivityTypes.ConversationUpdate,

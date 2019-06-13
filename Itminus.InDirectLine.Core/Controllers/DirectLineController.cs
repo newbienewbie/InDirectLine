@@ -29,16 +29,16 @@ namespace Itminus.InDirectLine.Core.Controllers{
         private readonly IDirectLineConnectionManager _connectionManager;
         private readonly TokenBuilder _tokenBuilder;
         private readonly IHostingEnvironment _env;
-        private InDirectLineOptions _inDirectlineOption;
+        private InDirectLineSettings _inDirectlineSettings;
 
-        public DirectLineController(ILogger<DirectLineController> logger, IOptions<InDirectLineOptions> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager,TokenBuilder tokenBuilder, IHostingEnvironment env)
+        public DirectLineController(ILogger<DirectLineController> logger, IOptions<InDirectLineSettings> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager,TokenBuilder tokenBuilder, IHostingEnvironment env)
         {
             this._logger= logger;
             this._helper = helper;
             this._connectionManager = connectionManager;
             this._tokenBuilder = tokenBuilder;
             this._env = env;
-            this._inDirectlineOption = opt.Value;
+            this._inDirectlineSettings = opt.Value;
         }
 
         [HttpGet("v3/[controller]")]
@@ -69,13 +69,13 @@ namespace Itminus.InDirectLine.Core.Controllers{
             var claims = new List<Claim>();
             claims.Add(new Claim(TokenBuilder.ClaimTypeConversationID, conversationId));
 
-            var expiresIn = this._inDirectlineOption.TokenExpiresIn ;
+            var expiresIn = this._inDirectlineSettings.TokenExpiresIn ;
             var token = this._tokenBuilder.BuildToken(userId,claims,expiresIn);
 
-            var mustBeConnectedIn = this._inDirectlineOption.StreamUrlMustBeConnectedIn;
+            var mustBeConnectedIn = this._inDirectlineSettings.StreamUrlMustBeConnectedIn;
             var streamUrlToken = this._tokenBuilder.BuildToken(userId,claims,mustBeConnectedIn);
 
-            var origin = UtilsEx.GetWebSocketOrigin(this._inDirectlineOption.ServiceUrl);
+            var origin = UtilsEx.GetWebSocketOrigin(this._inDirectlineSettings.ServiceUrl);
                 
             return new OkObjectResult(new DirectLineConversation{
                 ConversationId = conversationId,
@@ -93,7 +93,7 @@ namespace Itminus.InDirectLine.Core.Controllers{
         {
             return new OkObjectResult(new DirectLineConversation{
                 ConversationId = conversationId,
-                ExpiresIn= this._inDirectlineOption.TokenExpiresIn,
+                ExpiresIn= this._inDirectlineSettings.TokenExpiresIn,
                 Token = Request.Headers["Authentication"],
                 StreamUrl= $"ws://localhost:3000/v3/directline/conversations/{conversationId}/stream?t=RCurR_XV9ZA.cwA..."
             });
@@ -135,7 +135,7 @@ namespace Itminus.InDirectLine.Core.Controllers{
             // create a Id for activity
             activity.Id = Guid.NewGuid().ToString();
             activity.ChannelId = InDirectLineDefaults.ChannelId;
-            activity.ServiceUrl = this._inDirectlineOption.ServiceUrl;
+            activity.ServiceUrl = this._inDirectlineSettings.ServiceUrl;
             activity.Conversation = new ConversationAccount{
                 Id = conversationId,
             };
@@ -165,7 +165,7 @@ namespace Itminus.InDirectLine.Core.Controllers{
                     Message = "must be multipart/form-data"
                 });
             }
-            var serviceUrl = this._inDirectlineOption.ServiceUrl;
+            var serviceUrl = this._inDirectlineSettings.ServiceUrl;
             IList<Attachment> attachments = new List<Attachment>(); 
             foreach(var f in file)
             {
@@ -205,7 +205,7 @@ namespace Itminus.InDirectLine.Core.Controllers{
         {
             var pathSegs = new string[]{
                 this._env.ContentRootPath , 
-                this._inDirectlineOption.Attachments.BaseDirectoryForUploading,
+                this._inDirectlineSettings.Attachments.BaseDirectoryForUploading,
                 subdirectory,
             };
             var destDir = Path.Combine(pathSegs);
@@ -214,8 +214,8 @@ namespace Itminus.InDirectLine.Core.Controllers{
                 Directory.CreateDirectory(destDir);
 
             var contentUrlBaseStr= new string[]{ 
-                    this._inDirectlineOption.ServiceUrl,
-                    this._inDirectlineOption.Attachments.BaseUrlForDownloading,
+                    this._inDirectlineSettings.ServiceUrl,
+                    this._inDirectlineSettings.Attachments.BaseUrlForDownloading,
                     subdirectory,
                 }
                 .Select(s => s.Trim('/'))

@@ -48,11 +48,9 @@ namespace Itminus.InDirectLine.IntegrationBotSample
             // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
             services.AddTransient<IBot, EchoBot>();
 
-            var directlineConfig=Configuration.GetSection("DirectLine");
-            var jwt = Configuration.GetSection("Jwt").Get<InDirectLineAuthenticationOptions>();
-            services.AddInDirectLine(directlineConfig);
+            services.AddInDirectLine(Configuration.GetSection("DirectLine").Get<InDirectLineSettings>());
             services.AddAuthentication()
-                .AddInDirectLine(jwt);
+                .AddInDirectLine(Configuration.GetSection("Jwt").Get<InDirectLineAuthenticationOptions>());
             services.AddSingleton<IStorage,MemoryStorage>();
             services.AddSingleton<ConversationState>();
             services.AddSingleton<UserState>();
@@ -65,7 +63,6 @@ namespace Itminus.InDirectLine.IntegrationBotSample
             services.AddSingleton<IWeixinUserConversationStore,InMemoryWeiXinUserConversationStore>();
             services.Configure<WeiXinOptions>(Configuration.GetSection("Weixin"));
             services.AddSingleton<WeixinHelper>();
-            services.AddHttpClient<InDirectLineClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -32,14 +32,14 @@ namespace Itminus.InDirectLine.WeChat
         private readonly ILogger<WeiXinController> _logger;
         private readonly IWeixinUserConversationStore _ucstore;
         private readonly InDirectLineClient _directLineClient;
-        private readonly InDirectLineOptions _opts;
+        private readonly InDirectLineSettings _settings;
 
-        public WeiXinController(WeixinHelper helper, ILogger<WeiXinController> logger, IWeixinUserConversationStore ucstore, InDirectLineClient directLineClient,IOptions<InDirectLineOptions> opts)
+        public WeiXinController(WeixinHelper helper, ILogger<WeiXinController> logger, IWeixinUserConversationStore ucstore, InDirectLineClient directLineClient,IOptions<InDirectLineSettings> opts)
         {
             this._helper = helper;
             this._logger = logger;
             this._ucstore = ucstore;
-            this._opts = opts.Value;
+            this._settings = opts.Value;
 
             this._directLineClient = directLineClient;
         }

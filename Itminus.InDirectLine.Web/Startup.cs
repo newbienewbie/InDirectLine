@@ -16,6 +16,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Itminus.InDirectLine.Core;
 using Itminus.InDirectLine.Core.Authentication;
+using Itminus.InDirectLine.Core.Services;
 
 namespace Itminus.InDirectLine
 {
@@ -38,14 +39,11 @@ namespace Itminus.InDirectLine
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            var directlineConfig=Configuration.GetSection("DirectLine");
-            var jwt=Configuration.GetSection("Jwt").Get<InDirectLineAuthenticationOptions>();
-            services.AddInDirectLine(directlineConfig);
+            services.AddInDirectLine(Configuration.GetSection("DirectLine").Get<InDirectLineSettings>());
+            services.AddAuthentication()
+                .AddInDirectLine(Configuration.GetSection("Jwt").Get<InDirectLineAuthenticationOptions>());;
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            services.AddAuthentication()
-                .AddInDirectLine(jwt);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

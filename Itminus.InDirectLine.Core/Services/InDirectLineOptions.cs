@@ -1,7 +1,7 @@
 namespace Itminus.InDirectLine.Core.Services{
 
 
-    public class InDirectLineOptions{
+    public class InDirectLineSettings{
         public string ServiceUrl{get;set;}  = "http://127.0.0.1:3000";
         public string BotEndpoint {get;set;} = "http://127.0.0.1:3978/api/messages";
         public int TokenExpiresIn {get;set;} = 36000;

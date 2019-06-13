@@ -16,10 +16,10 @@ namespace Itminus.InDirectLine.Core.Services
     {
         private readonly HttpClient _httpClient;
 
-        public InDirectLineClient(HttpClient httpClient, IOptions<InDirectLineOptions> opts)
+        public InDirectLineClient(HttpClient httpClient, IOptions<InDirectLineSettings> settings)
         {
             this._httpClient = httpClient;
-            this._httpClient.BaseAddress = new Uri(opts.Value.ServiceUrl);
+            this._httpClient.BaseAddress = new Uri(settings.Value.ServiceUrl);
         }
 
         public async Task<DirectLineConversation> GenerateTokenAsync(TokenCreationPayload payload)

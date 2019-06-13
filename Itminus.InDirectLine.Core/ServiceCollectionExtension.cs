@@ -19,9 +19,15 @@ namespace Itminus.InDirectLine.Core
     public static class ServiceCollectionExtension
     {
 
-        public static IServiceCollection AddInDirectLine(this IServiceCollection services,IConfiguration directlineConfig)
+        public static IServiceCollection AddInDirectLine(this IServiceCollection services, InDirectLineSettings directlineOpts)
         {
-            services.Configure<InDirectLineOptions>(directlineConfig);
+            services.Configure<InDirectLineSettings>(opt =>{
+                foreach(var pi in opt.GetType().GetProperties()) 
+                {
+                    var propValue = pi.GetValue(directlineOpts);
+                    pi.SetValue(opt,propValue);
+                }
+            });
 
             services.AddHttpClient();
             services.AddSingleton<IConversationHistoryStore, InMemoryConversationHistoryStore>();
@@ -31,8 +37,9 @@ namespace Itminus.InDirectLine.Core
             services.AddAuthorization(opt =>{
                 opt.AddPolicy("MatchConversation",pb => pb.Requirements.Add(new MatchConversationAuthzRequirement()));
             });
+            services.AddHttpClient<InDirectLineClient>();
 
-            var botEndPointUri= UtilsEx.GetOrigin(directlineConfig["BotEndPoint"]);
+            var botEndPointUri= UtilsEx.GetOrigin(directlineOpts.BotEndpoint);
             services.AddSingleton<IAuthorizationHandler,MatchConversationAuthzHandler>();
             services.AddCors(options =>
             {

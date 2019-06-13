@@ -18,14 +18,14 @@ namespace Itminus.InDirectLine.Core.Controllers
     public class ConversationsController : Controller
     {
         private readonly ILogger<ConversationsController> _logger;
-        private readonly IOptions<InDirectLineOptions> _opt;
+        private readonly IOptions<InDirectLineSettings> _settings;
         private readonly DirectLineHelper _helper;
         private readonly IDirectLineConnectionManager _connectionManager;
 
-        public ConversationsController(ILogger<ConversationsController> logger, IOptions<InDirectLineOptions> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager)
+        public ConversationsController(ILogger<ConversationsController> logger, IOptions<InDirectLineSettings> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager)
         {
             this._logger = logger;
-            this._opt = opt;
+            this._settings = opt;
             this._helper = helper;
             this._connectionManager = connectionManager;
         }

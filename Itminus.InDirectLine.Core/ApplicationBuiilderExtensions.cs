@@ -26,7 +26,7 @@ namespace Itminus.InDirectLine.Core
         {
             var sp = app.ApplicationServices;
             var env = sp.GetRequiredService<IHostingEnvironment>();
-            var directLineOpt = sp.GetRequiredService<IOptions<InDirectLineOptions>>()?.Value;
+            var directLineOpt = sp.GetRequiredService<IOptions<InDirectLineSettings>>()?.Value;
 
             if(directLineOpt ==null)
             {
@@ -52,8 +52,8 @@ namespace Itminus.InDirectLine.Core
 
             var sp = app.ApplicationServices;
             var env = sp.GetRequiredService<IHostingEnvironment>();
-            var directLineOpt = sp.GetRequiredService<IOptions<InDirectLineOptions>>()?.Value;
-            if(directLineOpt ==null)
+            var directLineSettings = sp.GetRequiredService<IOptions<InDirectLineSettings>>()?.Value;
+            if(directLineSettings ==null)
             {
                 throw new Exception("InDirectLineOptions cannot be null!");
             }
@@ -64,7 +64,7 @@ namespace Itminus.InDirectLine.Core
                 ReceiveBufferSize = 4 * 1024
             };
 
-            var botEndPoint = directLineOpt.BotEndpoint;
+            var botEndPoint = directLineSettings.BotEndpoint;
             var botOrigin = UtilsEx.GetOrigin(botEndPoint);
             webSocketOptions.AllowedOrigins.Add(botOrigin);
             webSocketOptions.AllowedOrigins.Add("*");

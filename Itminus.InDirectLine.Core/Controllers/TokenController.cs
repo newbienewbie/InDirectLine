@@ -26,15 +26,15 @@ namespace Itminus.InDirectLine.Core.Controllers{
         private readonly DirectLineHelper _helper;
         private readonly IDirectLineConnectionManager _connectionManager;
         private readonly TokenBuilder _tokenBuilder;
-        private InDirectLineOptions _inDirectlineOption;
+        private InDirectLineSettings _inDirectlineSettings;
 
-        public TokensController(ILogger<TokensController> logger, IOptions<InDirectLineOptions> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager,TokenBuilder tokenBuilder)
+        public TokensController(ILogger<TokensController> logger, IOptions<InDirectLineSettings> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager,TokenBuilder tokenBuilder)
         {
             this._logger= logger;
             this._helper = helper;
             this._connectionManager = connectionManager;
             this._tokenBuilder = tokenBuilder;
-            this._inDirectlineOption = opt.Value;
+            this._inDirectlineSettings = opt.Value;
         }
 
 
@@ -46,7 +46,8 @@ namespace Itminus.InDirectLine.Core.Controllers{
             var userId = payload.UserId;
             var conversationId = Guid.NewGuid().ToString();
             var claims = new List<Claim>();
-            var expiresIn = this._inDirectlineOption.TokenExpiresIn;
+            claims.Add(new Claim(TokenBuilder.ClaimTypeConversationID,conversationId));
+            var expiresIn = this._inDirectlineSettings.TokenExpiresIn;
             var token =  this._tokenBuilder.BuildToken( userId, claims, expiresIn);
             return new OkObjectResult(new DirectLineConversation{
                 ConversationId = conversationId,
@@ -71,7 +72,7 @@ namespace Itminus.InDirectLine.Core.Controllers{
             }
             var claims = new List<Claim>();
             claims.Add(new Claim(TokenBuilder.ClaimTypeConversationID, conversationId));
-            var expiresIn = this._inDirectlineOption.TokenExpiresIn;
+            var expiresIn = this._inDirectlineSettings.TokenExpiresIn;
             var token =  this._tokenBuilder.BuildToken(userId, claims, expiresIn);
             return new OkObjectResult(new DirectLineConversation{
                 ConversationId = conversationId,

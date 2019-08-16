@@ -3,8 +3,14 @@
 Azure rocks. But sometime we need **Host our own `DirectLine` & [Bot Framework](https://docs.microsoft.com/en-us/azure/bot-service/bot-service-overview-introduction?view=azure-bot-service-4.0) without Azure**.
 For example, test [webchat](https://github.com/Microsoft/BotFramework-WebChat) with no internet. :)
 
-![Demo](https://github.com/newbienewbie/InDirectLine/blob/master/Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample/webchat-demo.png?raw=true)
+<div>
+<div style="height:400px">
+<img style="float: left; height: 400px; padding: 2em;" alt="WebChat-demo" src="https://github.com/newbienewbie/InDirectLine/blob/master/Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample/webchat-demo.png?raw=true" />
 
+<img style="float: left; height: 400px; padding: 2em" alt="WeChat MP demo" src="https://github.com/newbienewbie/InDirectLine/blob/master/Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample/Wechat-demo.png?raw=true" />
+</div>
+<div style="clear: both;"></div>
+<div>
 ## How it works
 
 Actually, the `DirectLine` is a **bridge** that connects your bot and your client. This project (`InDirectLine`) is a custom implementation of my own written in [ASP.NET Core](https://github.com/aspnet/AspNetCore).

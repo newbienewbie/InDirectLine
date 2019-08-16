@@ -11,8 +11,8 @@ namespace Itminus.InDirectLine.IntegrationBotSample.Dialogs
     {
         public static string TextPrompt = nameof(TextPrompt);
         public static string ChoicePrompt = nameof(ChoicePrompt);
-        public static string WaterfallDialog = nameof(WaterfallDialog);
-
+        public static string Jokes = nameof(Jokes);
+        public static string QuestionPurpose = nameof(QuestionPurpose);
     };
 
     public class MainDialog : ComponentDialog
@@ -28,7 +28,7 @@ namespace Itminus.InDirectLine.IntegrationBotSample.Dialogs
 
             AddDialog(new TextPrompt(DialogNames.TextPrompt));
             AddDialog(new ChoicePrompt(DialogNames.ChoicePrompt));
-            AddDialog(new WaterfallDialog(DialogNames.WaterfallDialog, new WaterfallStep[]{
+            AddDialog(new WaterfallDialog(DialogNames.Jokes, new WaterfallStep[]{
                 // send background
                 async(ctx , ct)=>{
                     var activity = MessageFactory.Text("有一天给你女朋友给你买了两条领带，一条蓝色的，一条粉色的。你很高兴，第二天一早，你打算穿一条到公司去。");
@@ -62,10 +62,51 @@ namespace Itminus.InDirectLine.IntegrationBotSample.Dialogs
                     await ctx.Context.SendActivityAsync(text,ct);
                     var text2 = MessageFactory.Text("女朋友：你是不是不喜欢另外一条？");
                     await ctx.Context.SendActivityAsync(text2,ct);
+                    var closing= MessageFactory.Text("笑话讲完了");
+                    await ctx.Context.SendActivityAsync(closing,ct);
                     return await ctx.NextAsync(null,ct);
                 },
             }));
-            InitialDialogId = nameof(WaterfallDialog);
+            AddDialog(new WaterfallDialog(DialogNames.QuestionPurpose, new WaterfallStep[] {
+                async(ctx, ct) =>{
+                    var activity = MessageFactory.Text("目前我提供以下功能：");
+                    await ctx.Context.SendActivityAsync(activity,ct);
+                    return await ctx.NextAsync(null,ct);
+                },
+                async(ctx , ct)=>{
+                    var dialogTurnResult = await ctx.PromptAsync(DialogNames.ChoicePrompt,new PromptOptions{
+                        Choices = new List<Choice>{
+                            new Choice{
+                                Value = "A: 历史文章",
+                                Synonyms = new List<string>{
+                                    "A","历史","历史文章",
+                                },
+                            },
+                            new Choice{
+                                Value = "B: 笑话",
+                                Synonyms = new List<string>{
+                                    "B","笑话",
+                                },
+                            },
+                        },
+                    });
+                    return dialogTurnResult;
+                },
+                // process
+                async(ctx , ct)=>{
+                    var choice = ctx.Result as FoundChoice;
+                    if(choice.Index == 0){
+                        var text = MessageFactory.Text($" 这里是{choice.Value}");
+                        await ctx.Context.SendActivityAsync(text,ct);
+                        return await ctx.NextAsync(null,ct);
+                    } else if(choice.Index == 1) {
+                        return await ctx.BeginDialogAsync(DialogNames.Jokes);
+                    }else{
+                        return await ctx.NextAsync(null,ct);
+                    }
+                },
+            }));
+            InitialDialogId = DialogNames.QuestionPurpose;
         }
 
 

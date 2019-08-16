@@ -11,6 +11,7 @@ For example, test [webchat](https://github.com/Microsoft/BotFramework-WebChat) w
 </div>
 <div style="clear: both;"></div>
 <div>
+   
 ## How it works
 
 Actually, the `DirectLine` is a **bridge** that connects your bot and your client. This project (`InDirectLine`) is a custom implementation of my own written in [ASP.NET Core](https://github.com/aspnet/AspNetCore).

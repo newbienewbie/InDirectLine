@@ -50,7 +50,7 @@ namespace Itminus.InDirectLine.IntegrationBotSample.Bots
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    await turnContext.SendActivityAsync(MessageFactory.Text($"Welcome to Echo Bot."), cancellationToken);
+                    await turnContext.SendActivityAsync(MessageFactory.Text($"你好！请回复任意消息开始会话"), cancellationToken);
                 }
             }
         }

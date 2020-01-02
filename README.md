@@ -3,6 +3,15 @@
 Azure rocks. But sometime we need **Host our own `DirectLine` & [Bot Framework](https://docs.microsoft.com/en-us/azure/bot-service/bot-service-overview-introduction?view=azure-bot-service-4.0) without Azure**.
 For example, test [webchat](https://github.com/Microsoft/BotFramework-WebChat) with no internet. :)
 
+<div>
+<div style="height:400px">
+<img style="float: left; height: 400px; padding: 2em;" alt="WebChat-demo" src="https://github.com/newbienewbie/InDirectLine/blob/master/Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample/webchat-demo.png?raw=true" />
+
+<img style="float: left; height: 400px; padding: 2em" alt="WeChat MP demo" src="https://github.com/newbienewbie/InDirectLine/blob/master/Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample/Wechat-demo.png?raw=true" />
+</div>
+<div style="clear: both;"></div>
+<div>
+   
 ## How it works
 
 Actually, the `DirectLine` is a **bridge** that connects your bot and your client. This project (`InDirectLine`) is a custom implementation of my own written in [ASP.NET Core](https://github.com/aspnet/AspNetCore).
@@ -89,7 +98,7 @@ See [Itminus.InDirectLine.IntegrationBotSample](https://github.com/newbienewbie/
 
 The `InDirectLine` reads the `appsettings.json` file by default, which means it will listen on `http://localhost:3000` and assumes that the `http://127.0.0.1:3978/api/messages` is the bot message endpoint.
 
-You could create a `appsettings.Development.json` or a `appsettings.Production.json` and configure the options as you like. 
+You could create a `appsettings.Development.json` or a `appsettings.Production.json` and configure the options as you like. To use other ports, see [Itminus.InDirectLine.IntegrationBotSample](https://github.com/newbienewbie/InDirectLine/tree/master/Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample).
 
 Also you could pass the settings by [command line arguments](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.2#arguments) or by [environment variables](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.2#environment-variables-configuration-provider). 
 

@@ -1,3 +1,5 @@
+![InDirectLine@GitHub](https://github.com/newbienewbie/InDirectLine/workflows/InDirectLine-GitHub/badge.svg)
+
 # InDirectLine
 
 Azure rocks. But sometime we need **Host our own `DirectLine` & [Bot Framework](https://docs.microsoft.com/en-us/azure/bot-service/bot-service-overview-introduction?view=azure-bot-service-4.0) without Azure**.

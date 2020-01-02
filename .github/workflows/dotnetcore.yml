@@ -42,7 +42,7 @@ jobs:
       run: |
         dotnet build ./Itminus.InDirectLine.Core/Itminus.InDirectLine.Core.csproj
         dotnet build ./Itminus.InDirectLine.Web/Itminus.InDirectLine.Web.csproj
-        dotnet build ./Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample.csproj
+        dotnet build ./Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample/Itminus.InDirectLine.IntegrationBotSample.csproj
 
         
         

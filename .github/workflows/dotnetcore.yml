@@ -1,0 +1,35 @@
+name: InDirectLine-GitHub
+
+on: 
+  push:
+    branches: 
+      - master
+      - release/*  
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macOS-latest]
+        dotnet: [2.2.108]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{matrix.dotnet}}
+    - name: Test 
+      run: |
+        dotnet test ./Itminus.InDirectLine.Core.Tests/Itminus.InDirectLine.Core.Tests.csproj
+    - name: Build with dotnet
+      run: |
+        dotnet build ./Itminus.InDirectLine.Core/Itminus.InDirectLine.Core.csproj
+        dotnet build ./Itminus.InDirectLine.Web/Itminus.InDirectLine.Web.csproj
+        dotnet build ./Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample.csproj
+
+        
+        

@@ -37,7 +37,7 @@ namespace Itminus.InDirectLine.IntegrationBotSample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddControllersWithViews();
 
             // Create the credential provider to be used with the Bot Framework Adapter.
             services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();
@@ -76,19 +76,23 @@ namespace Itminus.InDirectLine.IntegrationBotSample
             {
                 app.UseHsts();
             }
-
+            //app.UseHttpsRedirection();
             app.UseInDirectLineCors();
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
+            app.UseRouting();
+
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseInDirectLineCore();
             app.UseInDirectLineUploadsStatic();
 
-            //app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseEndpoints(ep => {
+                ep.MapControllerRoute("default","{controller}/{action}/{id?}");
+            });
         }
     }
 }

@@ -1,12 +1,9 @@
-
-
 using System;
 using System.IO;
 using Itminus.InDirectLine.Core.Middlewares;
 using Itminus.InDirectLine.Core.Services;
 using Itminus.InDirectLine.Core.Utils;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Builder.Internal;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -25,7 +22,7 @@ namespace Itminus.InDirectLine.Core
         public static IApplicationBuilder UseInDirectLineUploadsStatic(this IApplicationBuilder app)
         {
             var sp = app.ApplicationServices;
-            var env = sp.GetRequiredService<IHostingEnvironment>();
+            var env = sp.GetRequiredService<IWebHostEnvironment>();
             var directLineOpt = sp.GetRequiredService<IOptions<InDirectLineSettings>>()?.Value;
 
             if(directLineOpt ==null)

@@ -15,30 +15,36 @@ namespace Itminus.InDirectLine.Core.Authorization
     public class MatchConversationAuthzHandler : AuthorizationHandler<MatchConversationAuthzRequirement>
     {
         private readonly ILogger<MatchConversationAuthzHandler> _logger;
-        private readonly HttpContext _httpContext;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public MatchConversationAuthzHandler(ILogger<MatchConversationAuthzHandler> logger, IHttpContextAccessor httpContextAccessor)
         {
             this._logger = logger;
-            this._httpContext = httpContextAccessor.HttpContext;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, MatchConversationAuthzRequirement requirement)
         {
-            var conversationId = this._httpContext.GetRouteValue("conversationid") as string;
-            if( string.IsNullOrEmpty( conversationId ))
-            {
+            var httpContext = this._httpContextAccessor.HttpContext;
+            if(httpContext==null){
                 context.Fail();
-                return Task.CompletedTask;
             }
-            var conversationMatches=context.User.HasClaim(c => 
-                c.Type== TokenBuilder.ClaimTypeConversationID && 
-                c.Value == conversationId 
-            );
-            if(conversationMatches){
-                context.Succeed(requirement);
-            }else{
-                context.Fail();
+            else{
+                var conversationId = httpContext.GetRouteValue("conversationid") as string;
+                if( string.IsNullOrEmpty( conversationId ))
+                {
+                    context.Fail();
+                    return Task.CompletedTask;
+                }
+                var conversationMatches=context.User.HasClaim(c => 
+                    c.Type== TokenBuilder.ClaimTypeConversationID && 
+                    c.Value == conversationId 
+                );
+                if(conversationMatches){
+                    context.Succeed(requirement);
+                }else{
+                    context.Fail();
+                }
             }
             return Task.CompletedTask;
         }

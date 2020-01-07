@@ -45,6 +45,7 @@ namespace Itminus.InDirectLine.Core.Controllers
                 Id = "id",
                 Name = "Bot",
             };
+            activity.Timestamp = activity.Timestamp?? DateTime.Now;
             var conversationExists = await this._helper.ConversationHistoryExistsAsync(conversationId);
             if(!conversationExists){
                 return BadRequest(new{
@@ -52,7 +53,7 @@ namespace Itminus.InDirectLine.Core.Controllers
                 });
             }
             await this._helper.AddActivityToConversationHistoryAsync(conversationId,activity);
-            this._logger.LogInformation("message from bot received: \r\nConversationId={0}\r\nActivity.Id={1}\tActivityType={2}\tMessageText={3}",conversationId,activity.Id,activity.Type,activity.Text);
+            this._logger.LogInformation("messages from bot received: \r\nConversationId={0}\r\nActivity.Id={1}\tActivityType={2}\tMessageText={3}",conversationId,activity.Id,activity.Type,activity.Text);
             return new OkResult();
         }
 
@@ -64,6 +65,7 @@ namespace Itminus.InDirectLine.Core.Controllers
                 Id = "id",
                 Name = "Bot",
             };
+            activity.Timestamp = activity.Timestamp?? DateTime.Now;
             var conversationExists = await this._helper.ConversationHistoryExistsAsync(conversationId);
             if(!conversationExists){
                 return BadRequest(new{
@@ -72,7 +74,7 @@ namespace Itminus.InDirectLine.Core.Controllers
             }
             await this._helper.AddActivityToConversationHistoryAsync(conversationId,activity);
             await this._connectionManager.SendActivitySetAsync(conversationId,activity);
-            this._logger.LogInformation("message from bot received: \r\nConversationId={0}\r\n ActivityId={1}\r\nActivity.Id={2}\tActivityType={3}\tMessageText={4}",conversationId,replyTo,activity.Id,activity.Type,activity.Text);
+            this._logger.LogInformation($"A message from bot received: \r\nConversationId={conversationId.ToString()}\r\n ReplyTo={replyTo}\r\nActivity.Id={activity.Id}\tActivityType={activity.Type}\tMessageText={activity.Text}");
             return new OkResult();
         }
 

@@ -31,6 +31,7 @@ namespace Itminus.InDirectLine.Core
             });
 
             services.AddHttpClient();
+            services.AddHttpContextAccessor();
             services.AddSingleton<IConversationHistoryStore, InMemoryConversationHistoryStore>();
             services.AddSingleton<IDirectLineConnection,WebSocketDirectLineConnection>();
             services.AddSingleton<IDirectLineConnectionManager,DirectLineConnectionManager>();

@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/netcoreapp2.2/Itminus.InDirectLine.Web.dll",
+            "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/Itminus.InDirectLine.Web.dll",
             "args": ["--urls=http://localhost:3000"],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,

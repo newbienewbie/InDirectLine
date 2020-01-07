@@ -42,9 +42,9 @@ namespace Itminus.InDirectLine
 
             services.AddInDirectLine(Configuration.GetSection("DirectLine").Get<InDirectLineSettings>());
             services.AddAuthentication()
-                .AddInDirectLine(Configuration.GetSection("Jwt").Get<InDirectLineAuthenticationOptions>());;
+                .AddInDirectLine(Configuration.GetSection("Jwt").Get<InDirectLineAuthenticationOptions>());
+            services.AddAuthorization();
             services.AddControllers();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,14 +61,16 @@ namespace Itminus.InDirectLine
                 app.UseHsts();
             }
             //app.UseHttpsRedirection();
-            app.UseInDirectLineCors();
-            app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseStaticFiles();
+            app.UseInDirectLineCors();
+
+            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseInDirectLineUploadsStatic();
             app.UseInDirectLineCore();
+            app.UseInDirectLineUploadsStatic();
 
             app.UseEndpoints(endpoints=>
             {

@@ -48,7 +48,7 @@ namespace Itminus.InDirectLine.Core
         public static IApplicationBuilder UseInDirectLineCore(this IApplicationBuilder app){
 
             var sp = app.ApplicationServices;
-            var env = sp.GetRequiredService<IHostingEnvironment>();
+            var env = sp.GetRequiredService<IWebHostEnvironment>();
             var directLineSettings = sp.GetRequiredService<IOptions<InDirectLineSettings>>()?.Value;
             if(directLineSettings ==null)
             {

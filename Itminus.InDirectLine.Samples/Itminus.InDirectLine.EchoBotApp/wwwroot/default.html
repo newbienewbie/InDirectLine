@@ -15,7 +15,10 @@
         </div>
     </header>
     <div id="webchat" role="main"></div>
+    <!--
     <script src="/js/webchat.js"></script>
+    -->
+    <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat-minimal.js"></script>
     <script>
         var userId ="User-"+ parseInt(Math.random()* 1000000);
         var userName = userId;
@@ -32,12 +35,13 @@
             var directLine = window.WebChat.createDirectLine({
                 domain: directlineDomain,
                 token: res.token,
+                webSocket:true,
             });
             window.WebChat.renderWebChat({
                 directLine: directLine,
                 userID: userId,
                 username: userName,
-                locale: 'en-US',
+                //locale: 'en-US',
             }, document.getElementById('webchat'));
         });
     </script>

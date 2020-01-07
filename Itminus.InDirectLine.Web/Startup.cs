@@ -44,7 +44,7 @@ namespace Itminus.InDirectLine
             services.AddAuthentication()
                 .AddInDirectLine(Configuration.GetSection("Jwt").Get<InDirectLineAuthenticationOptions>());
             services.AddAuthorization();
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

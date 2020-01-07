@@ -10,7 +10,7 @@ on:
     - master
 
 jobs:
-  test:
+  build:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macOS-latest]
@@ -25,19 +25,6 @@ jobs:
     - name: Test 
       run: |
         dotnet test ./Itminus.InDirectLine.Core.Tests/Itminus.InDirectLine.Core.Tests.csproj
-
-  build:
-    strategy:
-      matrix:
-        os: [windows-latest, ubuntu-latest, macOS-latest]
-        dotnet: [2.2.108]
-    runs-on: ${{ matrix.os }}
-    steps:
-    - uses: actions/checkout@v1
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{matrix.dotnet}}
     - name: Build with dotnet
       run: |
         dotnet build ./Itminus.InDirectLine.Core/Itminus.InDirectLine.Core.csproj

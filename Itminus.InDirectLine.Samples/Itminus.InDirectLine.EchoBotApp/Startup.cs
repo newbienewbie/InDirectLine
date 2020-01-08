@@ -11,8 +11,6 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +30,7 @@ namespace Itminus.InDirectLine.EchoBotApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddControllersWithViews();
 
             // Create the credential provider to be used with the Bot Framework Adapter.
             services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();
@@ -55,12 +53,12 @@ namespace Itminus.InDirectLine.EchoBotApp
             {
                 app.UseHsts();
             }
-
+            app.UseRouting();
             app.UseDefaultFiles();
             app.UseStaticFiles();
-
-            //app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseEndpoints(endpoints =>{
+                endpoints.MapControllerRoute("default","{controller}/{action}/{id?}");
+            });
         }
     }
 }

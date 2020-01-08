@@ -5,7 +5,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Itminus.InDirectLine.Core.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
 namespace Itminus.InDirectLine.Core.Authorization
@@ -13,18 +15,22 @@ namespace Itminus.InDirectLine.Core.Authorization
     public class MatchConversationAuthzHandler : AuthorizationHandler<MatchConversationAuthzRequirement>
     {
         private readonly ILogger<MatchConversationAuthzHandler> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public MatchConversationAuthzHandler(ILogger<MatchConversationAuthzHandler> logger)
+        public MatchConversationAuthzHandler(ILogger<MatchConversationAuthzHandler> logger, IHttpContextAccessor httpContextAccessor)
         {
             this._logger = logger;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, MatchConversationAuthzRequirement requirement)
         {
-            if(context.Resource is AuthorizationFilterContext mvcContext)
-            {
-                var conversationId= mvcContext.RouteData.Values["conversationId"] as string;
-
+            var httpContext = this._httpContextAccessor.HttpContext;
+            if(httpContext==null){
+                context.Fail();
+            }
+            else{
+                var conversationId = httpContext.GetRouteValue("conversationid") as string;
                 if( string.IsNullOrEmpty( conversationId ))
                 {
                     context.Fail();
@@ -40,10 +46,6 @@ namespace Itminus.InDirectLine.Core.Authorization
                     context.Fail();
                 }
             }
-            else{
-                context.Fail();
-            }
-
             return Task.CompletedTask;
         }
 

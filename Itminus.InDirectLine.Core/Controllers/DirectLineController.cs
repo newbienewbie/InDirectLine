@@ -28,10 +28,10 @@ namespace Itminus.InDirectLine.Core.Controllers{
         private readonly DirectLineHelper _helper;
         private readonly IDirectLineConnectionManager _connectionManager;
         private readonly TokenBuilder _tokenBuilder;
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         private InDirectLineSettings _inDirectlineSettings;
 
-        public DirectLineController(ILogger<DirectLineController> logger, IOptions<InDirectLineSettings> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager,TokenBuilder tokenBuilder, IHostingEnvironment env)
+        public DirectLineController(ILogger<DirectLineController> logger, IOptions<InDirectLineSettings> opt, DirectLineHelper helper, IDirectLineConnectionManager connectionManager,TokenBuilder tokenBuilder, IWebHostEnvironment env)
         {
             this._logger= logger;
             this._helper = helper;
@@ -139,6 +139,7 @@ namespace Itminus.InDirectLine.Core.Controllers{
             activity.Conversation = new ConversationAccount{
                 Id = conversationId,
             };
+            activity.Timestamp = activity.Timestamp?? DateTime.Now;
 
             // notify the client 
             await this._connectionManager.SendActivitySetAsync(conversationId,activity);

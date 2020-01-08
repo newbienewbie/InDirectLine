@@ -9,12 +9,14 @@ namespace Itminus.InDirectLine.Core.Services.IDirectLineConnections
 {
     public class WebSocketDirectLineConnection : IDirectLineConnection
     {
-        public WebSocketDirectLineConnection(WebSocket webSocket)
+        public WebSocketDirectLineConnection(WebSocket webSocket, TaskCompletionSource<object> tcs)
         {
             WebSocket = webSocket;
+            Tcs = tcs;
         }
 
         public WebSocket WebSocket { get; }
+        public TaskCompletionSource<object> Tcs { get; }
 
         public bool Avaiable
         {
@@ -40,6 +42,7 @@ namespace Itminus.InDirectLine.Core.Services.IDirectLineConnections
                     CancellationToken.None
                 );
             }
+            this.Tcs.SetResult(status);
         }
 
         public async Task<(bool,ArraySegment<byte>)> ReceiveAsync()

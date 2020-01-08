@@ -47,10 +47,12 @@ namespace Itminus.InDirectLine.Core.Middlewares
                     }
                     var token = context.Request.Query["t"].FirstOrDefault();
                     WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                    var tcs = new TaskCompletionSource<object>();
                     // register connection 
-                    var conn = new WebSocketDirectLineConnection(webSocket);
+                    var conn = new WebSocketDirectLineConnection(webSocket, tcs);
                     await this._connectionManager.RegisterConnectionAsync(conversaionId,conn);
                     await ProcessWebSocketAsync(webSocket,conversaionId);
+                    await tcs.Task;
                 }
                 else
                 {
@@ -77,15 +79,15 @@ namespace Itminus.InDirectLine.Core.Middlewares
                 // send all the history messages 
                 await OnConnectAsync(conversationId,0);
 
-                var buffer = new byte[1024 * 4];
-                var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                // loop untill the close status is set
-                while (!result.CloseStatus.HasValue)
-                {
-                    result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                    // there's no need to hanle message
-                }
-                await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+                //var buffer = new byte[1024 * 4];
+                //var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                //// loop untill the close status is set
+                //while (!result.CloseStatus.HasValue)
+                //{
+                //    result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                //    // there's no need to hanle message
+                //}
+                //await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
             }
         }
 

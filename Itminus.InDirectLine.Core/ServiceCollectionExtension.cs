@@ -10,6 +10,7 @@ using Itminus.InDirectLine.Core.Utils;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Bot.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -30,10 +31,12 @@ namespace Itminus.InDirectLine.Core
             });
 
             services.AddHttpClient();
+            services.AddHttpContextAccessor();
             services.AddSingleton<IConversationHistoryStore, InMemoryConversationHistoryStore>();
             services.AddSingleton<IDirectLineConnection,WebSocketDirectLineConnection>();
             services.AddSingleton<IDirectLineConnectionManager,DirectLineConnectionManager>();
             services.AddSingleton<TokenBuilder>();
+            services.AddScoped<ChannelServiceHandler, InDirectLineConversationHandler>();
             services.AddAuthorization(opt =>{
                 opt.AddPolicy("MatchConversation",pb => pb.Requirements.Add(new MatchConversationAuthzRequirement()));
             });

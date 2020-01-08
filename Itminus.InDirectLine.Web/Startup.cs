@@ -17,6 +17,8 @@ using Microsoft.IdentityModel.Tokens;
 using Itminus.InDirectLine.Core;
 using Itminus.InDirectLine.Core.Authentication;
 using Itminus.InDirectLine.Core.Services;
+using Microsoft.Extensions.Hosting;
+using Itminus.InDirectLine.Core.Controllers;
 
 namespace Itminus.InDirectLine
 {
@@ -41,13 +43,13 @@ namespace Itminus.InDirectLine
 
             services.AddInDirectLine(Configuration.GetSection("DirectLine").Get<InDirectLineSettings>());
             services.AddAuthentication()
-                .AddInDirectLine(Configuration.GetSection("Jwt").Get<InDirectLineAuthenticationOptions>());;
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .AddInDirectLine(Configuration.GetSection("Jwt").Get<InDirectLineAuthenticationOptions>());
+            services.AddAuthorization();
+            services.AddControllers().AddNewtonsoftJson().AddApplicationPart(typeof(DirectLineController).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -59,27 +61,21 @@ namespace Itminus.InDirectLine
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            //app.UseHttpsRedirection();
+            app.UseCookiePolicy();
+            app.UseStaticFiles();
             app.UseInDirectLineCors();
 
-            //app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseCookiePolicy();
+            app.UseRouting();
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseInDirectLineUploadsStatic();
             app.UseInDirectLineCore();
+            app.UseInDirectLineUploadsStatic();
 
-
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints=>
             {
-                routes.MapRoute(
-                    name: "area",
-                    template: "{area}/{controller=Home}/{action=Index}/{id?}");
-
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
         }
     }

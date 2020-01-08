@@ -9,12 +9,13 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/Itminus.InDirectLine.Web.dll",
-            "args": ["--urls=http://localhost:3000"],
+            "program": "${workspaceFolder}/bin/Debug/netcoreapp2.2/Itminus.InDirectLine.EchoBotApp.dll",
+            "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "launchBrowser": {
-                "enabled": true
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"

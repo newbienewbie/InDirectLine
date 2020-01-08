@@ -19,7 +19,7 @@
     <script>
         var userId ="User-"+ parseInt(Math.random()* 1000000);
         var userName = userId;
-        fetch('/v3/directline/tokens/generate', { 
+        fetch('http://localhost:3000/v3/directline/tokens/generate', { 
             method: 'POST',
             headers:{
                 "Content-Type":"application/json",
@@ -29,7 +29,7 @@
         .then(res => res.json())
         .then(res => {
             var directLine = window.WebChat.createDirectLine({
-                domain: "/v3/directline",
+                domain: "http://localhost:3000/v3/directline",
                 token: res.token,
             });
             window.WebChat.renderWebChat({

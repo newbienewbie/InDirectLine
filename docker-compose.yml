@@ -1,0 +1,18 @@
+version: '3'
+services:
+    indirectline:
+        build: 
+            context: ./
+            dockerfile: InDirectLine.Dockerfile
+        ports: 
+            - 3000:3000
+        environment: 
+            - DirectLine:ServiceUrl=http://indirectline:3000
+            - DirectLine:BotEndpoint=http://echobotsample:5000/api/messages
+    echobotsample:
+        build: 
+            context: ./
+            dockerfile: EchoBotSample.Dockerfile
+        ports:
+            - 5000:5000
+    

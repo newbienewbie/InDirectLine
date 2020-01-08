@@ -66,37 +66,47 @@ namespace Itminus.InDirectLine.Core.Controllers{
             // make sure the conversationId is created if null or empty
             conversationId = result.Activity.Conversation.Id;
 
-            var claims = new List<Claim>();
-            claims.Add(new Claim(TokenBuilder.ClaimTypeConversationID, conversationId));
-
-            var expiresIn = this._inDirectlineSettings.TokenExpiresIn ;
-            var token = this._tokenBuilder.BuildToken(userId,claims,expiresIn);
-
-            var mustBeConnectedIn = this._inDirectlineSettings.StreamUrlMustBeConnectedIn;
-            var streamUrlToken = this._tokenBuilder.BuildToken(userId,claims,mustBeConnectedIn);
-
-            var origin = UtilsEx.GetWebSocketOrigin(this._inDirectlineSettings.ServiceUrl);
-                
-            return new OkObjectResult(new DirectLineConversation{
-                ConversationId = conversationId,
-                ExpiresIn= expiresIn,
-                Token = token,
-                StreamUrl= $"{origin}/v3/directline/conversations/{conversationId}/stream?t={streamUrlToken}"
-            });
+            var dlConversation = this.GetDirectLineConversation(userId, conversationId);
+            return new OkObjectResult(dlConversation);
         }
-
 
         //
         [HttpGet("v3/[controller]/conversations/{conversationId}")]
         [Authorize(Policy="MatchConversation", AuthenticationSchemes=InDirectLineDefaults.AuthenticationSchemeName)]
         public IActionResult ConversationInfo(string conversationId)
         {
-            return new OkObjectResult(new DirectLineConversation{
+            var userId= HttpContext.User?.Claims.FirstOrDefault(c => c.Type== ClaimTypes.Name)?.Value;
+            if(string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("userId cannot be null!");
+            }
+            var dl = this.GetDirectLineConversation(userId, conversationId);
+            return new OkObjectResult(dl);
+        }
+
+        private DirectLineConversation GetDirectLineConversation(string userId, string conversationId)
+        {
+            var claims = new List<Claim>();
+            claims.Add(new Claim(TokenBuilder.ClaimTypeConversationID, conversationId));
+            var expiresIn = this._inDirectlineSettings.TokenExpiresIn ;
+            var token = this._tokenBuilder.BuildToken(userId,claims,expiresIn);
+
+            var mustBeConnectedIn = this._inDirectlineSettings.StreamUrlMustBeConnectedIn;
+            var streamUrlToken = this._tokenBuilder.BuildToken(userId,claims,mustBeConnectedIn);
+
+            // we should not use ServiceUrl here because 
+            //     - Service URL is exposed to Bot Message Endpont only, 
+            //     - it might be different from the one exposed to client
+            // so we should get the StreamURL from current URL
+            var origin = $"{this.HttpContext.Request.Scheme}://{HttpContext.Request.Host}"; // note the Host has already included the PORT
+            origin = UtilsEx.GetWebSocketOrigin(origin);
+            this._logger.LogInformation($"the origin for streamUrl is {origin}");
+            return new DirectLineConversation{
                 ConversationId = conversationId,
-                ExpiresIn= this._inDirectlineSettings.TokenExpiresIn,
-                Token = Request.Headers["Authentication"],
-                StreamUrl= $"ws://localhost:3000/v3/directline/conversations/{conversationId}/stream?t=RCurR_XV9ZA.cwA..."
-            });
+                ExpiresIn= expiresIn,
+                Token = token,
+                StreamUrl= $"{origin}/v3/directline/conversations/{conversationId}/stream?t={streamUrlToken}"
+            };
         }
 
         //

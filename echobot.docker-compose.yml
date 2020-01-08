@@ -8,11 +8,11 @@ services:
             - 3000:3000
         environment: 
             - DirectLine:ServiceUrl=http://indirectline:3000
-            - DirectLine:BotEndpoint=http://integrationsample:5000/api/messages
-    integrationsample:
+            - DirectLine:BotEndpoint=http://echobotsample:5000/api/messages
+    echobotsample:
         build: 
             context: ./
-            dockerfile: IntegrationSample.Dockerfile
+            dockerfile: EchoBotSample.Dockerfile
         ports:
             - 5000:5000
     

@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Itminus.InDirectLine.Core\Itminus.InDirectLine.Core.csproj" />
     <ProjectReference Include="..\..\Itminus.InDirectLine.WeChat\Itminus.InDirectLine.WeChat.csproj" />
   </ItemGroup>
 

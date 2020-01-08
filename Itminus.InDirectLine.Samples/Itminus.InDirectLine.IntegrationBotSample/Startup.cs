@@ -48,7 +48,6 @@ namespace Itminus.InDirectLine.IntegrationBotSample
             // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
             services.AddTransient<IBot, EchoBot>();
 
-            services.AddInDirectLine(Configuration.GetSection("DirectLine").Get<InDirectLineSettings>());
             services.AddAuthentication()
                 .AddInDirectLine(Configuration.GetSection("Jwt").Get<InDirectLineAuthenticationOptions>());
             services.AddSingleton<IStorage,MemoryStorage>();
@@ -77,7 +76,6 @@ namespace Itminus.InDirectLine.IntegrationBotSample
                 app.UseHsts();
             }
             //app.UseHttpsRedirection();
-            app.UseInDirectLineCors();
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -86,9 +84,6 @@ namespace Itminus.InDirectLine.IntegrationBotSample
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseInDirectLineCore();
-            app.UseInDirectLineUploadsStatic();
 
             app.UseEndpoints(ep => {
                 ep.MapControllerRoute("default","{controller}/{action}/{id?}");

@@ -18,6 +18,7 @@ using Itminus.InDirectLine.Core;
 using Itminus.InDirectLine.Core.Authentication;
 using Itminus.InDirectLine.Core.Services;
 using Microsoft.Extensions.Hosting;
+using Itminus.InDirectLine.Core.Controllers;
 
 namespace Itminus.InDirectLine
 {
@@ -44,7 +45,7 @@ namespace Itminus.InDirectLine
             services.AddAuthentication()
                 .AddInDirectLine(Configuration.GetSection("Jwt").Get<InDirectLineAuthenticationOptions>());
             services.AddAuthorization();
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson().AddApplicationPart(typeof(DirectLineController).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Itminus.InDirectLine.Core.Models;
@@ -61,7 +62,7 @@ namespace Itminus.InDirectLine.WeChat
 
         // WX Platform Will Post the Message to the Endpoint 
         [HttpPost("")]
-        public async Task<string> Post([FromQuery]string signature, [FromQuery]string nonce, [FromQuery]string timestamp)
+        public async Task<string> Post([FromQuery]string signature, [FromQuery]string nonce, [FromQuery]string timestamp, CancellationToken ct)
         {
            
 
@@ -70,7 +71,9 @@ namespace Itminus.InDirectLine.WeChat
 
             this._logger.LogInformation("Msg from WeiXin Server received");
 
-            XDocument doc = XDocument.Load(Request.Body);
+            // As of 3.0, AllowSynchronousIO is disallowed by default
+            //     see https://github.com/dotnet/aspnetcore/issues/7644
+            XDocument doc = await XDocument.LoadAsync(Request.Body, new LoadOptions{}, ct);
             this._logger.LogInformation("Msg from WeiXin Server received is: \n"+ doc.ToString());
             var requestMessage = RequestMessageFactory.GetRequestEntity(doc);
 
@@ -91,20 +94,21 @@ namespace Itminus.InDirectLine.WeChat
                         Type = ActivityTypes.Message,
                     };
                     var conversation = conversationInfo.DirectLineConversation;
+                    this._logger.LogDebug($"Sending Activity to DirectLine: conversationId={conversation.ConversationId}");
                     await this._directLineClient.SendActivityAsync(conversation.ConversationId, activity,conversation.Token)
                         .ConfigureAwait(false);
+                    this._logger.LogDebug($"Receiving Activity from DirectLine: conversationId={conversation.ConversationId}");
                     var respActivities= await this._directLineClient.RetrieveActivitySetAsync(conversation.ConversationId, conversationInfo.Watermark, conversation.Token)
                         .ConfigureAwait(false);
-
+                    this._logger.LogDebug($"Received Activity from DirectLine: Watermark={respActivities.Watermark}");
                     conversationInfo.Watermark =respActivities.Watermark.ToString();
-
                     var reply= String.Join(
                         "\n\n",
                         respActivities.Activities
                             .Where(a => a?.Recipient?.Id == userId)   // todo: where id == botId
                             .Select(a => MessageToText(a) )
                     );
-
+                    this._logger.LogDebug($"Creating repsonse message to WeiXin");
                     var strongRespMessage=ResponseMessageBase.CreateFromRequestMessage<ResponseMessageText>(strongRequestMessage); 
                     strongRespMessage.Content =reply;
                     respDoc= strongRespMessage.ConvertEntityToXmlString();
@@ -119,7 +123,7 @@ namespace Itminus.InDirectLine.WeChat
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
+            this._logger.LogDebug($"Msg To WeiXin generated: ${respDoc.ToString()}");
             return respDoc;
         }
 

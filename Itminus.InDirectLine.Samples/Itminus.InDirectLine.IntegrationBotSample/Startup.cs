@@ -64,6 +64,7 @@ namespace Itminus.InDirectLine.IntegrationBotSample
             services.Configure<WeiXinOptions>(Configuration.GetSection("Weixin"));
             services.AddSingleton<WeixinHelper>();
             services.AddHttpClient<InDirectLineClient>();
+            services.Configure<ForwardedHeadersOptions>(opts => opts.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.All);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,6 +79,7 @@ namespace Itminus.InDirectLine.IntegrationBotSample
                 app.UseHsts();
             }
             //app.UseHttpsRedirection();
+            app.UseForwardedHeaders();
 
             app.UseDefaultFiles();
             app.UseStaticFiles();

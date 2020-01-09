@@ -64,6 +64,9 @@ namespace Itminus.InDirectLine.IntegrationBotSample
             services.AddSingleton<IWeixinUserConversationStore,InMemoryWeiXinUserConversationStore>();
             services.Configure<WeiXinOptions>(Configuration.GetSection("Weixin"));
             services.AddSingleton<WeixinHelper>();
+            services.Configure<InDirectLineSettings>(opts=>{
+                opts.ServiceUrl= Configuration["DirectLine:ServiceUrl"];
+            });
             services.AddHttpClient<InDirectLineClient>();
             services.Configure<ForwardedHeadersOptions>(opts =>{
                 opts.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost;

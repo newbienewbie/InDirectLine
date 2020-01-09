@@ -19,6 +19,7 @@ using Itminus.InDirectLine.Core.Authentication;
 using Itminus.InDirectLine.Core.Services;
 using Microsoft.Extensions.Hosting;
 using Itminus.InDirectLine.Core.Controllers;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Itminus.InDirectLine
 {
@@ -46,12 +47,17 @@ namespace Itminus.InDirectLine
                 .AddInDirectLine(Configuration.GetSection("Jwt").Get<InDirectLineAuthenticationOptions>());
             services.AddAuthorization();
             services.AddControllers().AddNewtonsoftJson().AddApplicationPart(typeof(DirectLineController).Assembly);
-            services.Configure<ForwardedHeadersOptions>(opts => opts.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.All);
+            services.Configure<ForwardedHeadersOptions>(opts =>{
+                opts.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost;
+                opts.KnownNetworks.Clear();
+                opts.KnownProxies.Clear();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -62,7 +68,6 @@ namespace Itminus.InDirectLine
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseForwardedHeaders();
             //app.UseHttpsRedirection();
             app.UseCookiePolicy();
             app.UseStaticFiles();

@@ -23,6 +23,7 @@ using Itminus.InDirectLine.IntegrationBotSample.Dialogs;
 using Itminus.InDirectLine.WeChat.Services;
 using Itminus.InDirectLine.Core.Services;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Itminus.InDirectLine.IntegrationBotSample
 {
@@ -64,12 +65,17 @@ namespace Itminus.InDirectLine.IntegrationBotSample
             services.Configure<WeiXinOptions>(Configuration.GetSection("Weixin"));
             services.AddSingleton<WeixinHelper>();
             services.AddHttpClient<InDirectLineClient>();
-            services.Configure<ForwardedHeadersOptions>(opts => opts.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.All);
+            services.Configure<ForwardedHeadersOptions>(opts =>{
+                opts.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost;
+                opts.KnownNetworks.Clear();
+                opts.KnownProxies.Clear();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -79,7 +85,6 @@ namespace Itminus.InDirectLine.IntegrationBotSample
                 app.UseHsts();
             }
             //app.UseHttpsRedirection();
-            app.UseForwardedHeaders();
 
             app.UseDefaultFiles();
             app.UseStaticFiles();

@@ -22,6 +22,7 @@ using Itminus.InDirectLine.Core.Authentication;
 using Itminus.InDirectLine.IntegrationBotSample.Dialogs;
 using Itminus.InDirectLine.WeChat.Services;
 using Itminus.InDirectLine.Core.Services;
+using Microsoft.Extensions.Hosting;
 
 namespace Itminus.InDirectLine.IntegrationBotSample
 {
@@ -62,10 +63,11 @@ namespace Itminus.InDirectLine.IntegrationBotSample
             services.AddSingleton<IWeixinUserConversationStore,InMemoryWeiXinUserConversationStore>();
             services.Configure<WeiXinOptions>(Configuration.GetSection("Weixin"));
             services.AddSingleton<WeixinHelper>();
+            services.AddHttpClient<InDirectLineClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

@@ -52,6 +52,7 @@ namespace Itminus.InDirectLine.IntegrationBotSample.Dialogs
                                 },
                             },
                         },
+                        Style=ListStyle.SuggestedAction,
                     });
                     return dialogTurnResult;
                 },
@@ -89,6 +90,7 @@ namespace Itminus.InDirectLine.IntegrationBotSample.Dialogs
                                 },
                             },
                         },
+                        Style = ListStyle.HeroCard,
                     });
                     return dialogTurnResult;
                 },

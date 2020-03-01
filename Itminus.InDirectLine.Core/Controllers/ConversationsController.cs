@@ -45,7 +45,9 @@ namespace Itminus.InDirectLine.Core.Controllers
                 Id = "id",
                 Name = "Bot",
             };
-            activity.Timestamp = activity.Timestamp?? DateTime.Now;
+            // always uses the server receiving time 
+            //     it prevents messages displaying in incorrect order
+            activity.Timestamp = DateTime.Now;
             var conversationExists = await this._helper.ConversationHistoryExistsAsync(conversationId);
             if(!conversationExists){
                 return BadRequest(new{

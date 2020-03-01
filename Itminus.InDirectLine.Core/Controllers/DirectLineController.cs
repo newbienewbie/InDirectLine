@@ -149,7 +149,8 @@ namespace Itminus.InDirectLine.Core.Controllers{
             activity.Conversation = new ConversationAccount{
                 Id = conversationId,
             };
-            activity.Timestamp = activity.Timestamp?? DateTime.Now;
+            // always uses the server receiving time 
+            activity.Timestamp = DateTime.Now;
 
             // notify the client 
             await this._connectionManager.SendActivitySetAsync(conversationId,activity);

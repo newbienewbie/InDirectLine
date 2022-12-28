@@ -1,8 +1,8 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 3000 
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:7.0 AS build
 WORKDIR /src
 COPY . .
 WORKDIR /src/Itminus.InDirectLine.Web

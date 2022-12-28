@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample/bin/Debug/netcoreapp2.2/Itminus.InDirectLine.IntegrationBotSample.dll",
+            "program": "${workspaceFolder}/Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample/bin/Debug/net7.0/Itminus.InDirectLine.IntegrationBotSample.dll",
             "args": ["--urls=http://localhost:5000"],
             "cwd": "${workspaceFolder}/Itminus.InDirectLine.Samples/Itminus.InDirectLine.IntegrationBotSample",
             "stopAtEntry": false,

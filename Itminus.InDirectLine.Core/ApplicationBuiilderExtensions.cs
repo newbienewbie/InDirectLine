@@ -57,8 +57,7 @@ namespace Itminus.InDirectLine.Core
 
             var webSocketOptions = new WebSocketOptions()
             {
-                KeepAliveInterval = TimeSpan.FromSeconds(120),
-                ReceiveBufferSize = 4 * 1024
+                KeepAliveInterval = TimeSpan.FromSeconds(120)
             };
 
             var botEndPoint = directLineSettings.BotEndpoint;

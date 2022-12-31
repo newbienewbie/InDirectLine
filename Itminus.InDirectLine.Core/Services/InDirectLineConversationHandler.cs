@@ -12,16 +12,19 @@ using Microsoft.Rest;
 
 namespace Itminus.InDirectLine.Core.Services
 {
-    public class InDirectLineConversationHandler : ChannelServiceHandler
+    public class InDirectLineConversationHandler : CloudChannelServiceHandler
     {
 
         private readonly ILogger<InDirectLineConversationHandler> _logger;
         private readonly IDirectLineConnectionManager _connectionManager;
         private readonly DirectLineHelper _helper;
 
-        public InDirectLineConversationHandler(ILogger<InDirectLineConversationHandler> logger, IDirectLineConnectionManager connectionManager ,DirectLineHelper helper , ICredentialProvider credentialProvider, AuthenticationConfiguration authConfiguration, IChannelProvider channelProvider = null) 
+        public InDirectLineConversationHandler(ILogger<InDirectLineConversationHandler> logger, 
+                                               IDirectLineConnectionManager connectionManager, 
+                                               DirectLineHelper helper, 
+                                               BotFrameworkAuthentication auth) 
 
-            : base(credentialProvider, authConfiguration, channelProvider)
+            : base(auth)
         {
             this._logger = logger;
             this._connectionManager = connectionManager;

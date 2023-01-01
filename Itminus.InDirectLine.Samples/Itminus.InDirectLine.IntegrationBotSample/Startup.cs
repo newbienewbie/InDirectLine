@@ -42,10 +42,10 @@ namespace Itminus.InDirectLine.IntegrationBotSample
             services.AddControllersWithViews();
 
             // Create the credential provider to be used with the Bot Framework Adapter.
-            services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();
+            services.AddSingleton<ConfigurationBotFrameworkAuthentication>();
 
             // Create the Bot Framework Adapter.
-            services.AddSingleton<IBotFrameworkHttpAdapter, BotFrameworkHttpAdapter>();
+            services.AddSingleton<IBotFrameworkHttpAdapter, CloudAdapter>();
 
             // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
             services.AddTransient<IBot, EchoBot>();

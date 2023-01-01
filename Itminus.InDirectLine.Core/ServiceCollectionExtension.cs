@@ -36,7 +36,7 @@ namespace Itminus.InDirectLine.Core
             services.AddSingleton<IDirectLineConnection,WebSocketDirectLineConnection>();
             services.AddSingleton<IDirectLineConnectionManager,DirectLineConnectionManager>();
             services.AddSingleton<TokenBuilder>();
-            services.AddScoped<ChannelServiceHandler, InDirectLineConversationHandler>();
+            services.AddScoped<CloudChannelServiceHandler, InDirectLineConversationHandler>();
             services.AddAuthorization(opt =>{
                 opt.AddPolicy("MatchConversation",pb => pb.Requirements.Add(new MatchConversationAuthzRequirement()));
             });

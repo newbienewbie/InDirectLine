@@ -37,6 +37,7 @@ namespace Itminus.InDirectLine.Core.Services
             }
 
             claims.Add(new Claim(ClaimTypes.Name,userName));
+            claims.Add(new Claim("user", userName));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._authenticationOpts.Key));
             var sign = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

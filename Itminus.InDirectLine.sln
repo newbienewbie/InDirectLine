@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.452
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Itminus.InDirectLine.Core", "Itminus.InDirectLine.Core\Itminus.InDirectLine.Core.csproj", "{606FBAC5-DAAC-434C-8324-5AB2AC47943E}"
 EndProject
@@ -12,6 +12,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Itminus.InDirectLine.IntegrationBotSample", "Itminus.InDirectLine.Samples\Itminus.InDirectLine.IntegrationBotSample\Itminus.InDirectLine.IntegrationBotSample.csproj", "{67E76D85-CCF3-46EE-B10D-DF389D6E4B3C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Itminus.InDirectLine.Core.Tests", "Itminus.InDirectLine.Core.Tests\Itminus.InDirectLine.Core.Tests.csproj", "{EAA1C5F6-3388-4899-B233-75E9B3BE301E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{22117E27-A732-414B-83F8-B1C8C0A8ABDE}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
